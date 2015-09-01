@@ -1,0 +1,38 @@
+each team has a base
+warriors spawn from the base
+warriors can attack enemy bases
+warriors can attack other warriors
+warriors attack a target by attempting to occupy the same space as it
+all warriors occupying the same space will die except one (chosen at random)
+a game will end when there is only one teams base
+ or one teams warriors alive
+each team will have a fixed # of warriors spawned from their
+ base
+
+a game has the following attrs:
+ board size
+ # of teams (private)
+ # of warriors (per team)
+ length of game (in ticks)
+ base positions (private)
+ random seed
+
+the simulation will give each player 1 second
+ to make it's moves known during a round
+
+ticks go as follows:
+ announce round start
+ gather player input
+ make warrior moves
+ opposing warriors in same space die
+ warriors do battle
+ warriors die from battle
+ warriors left alive possible do battle with base
+ dead players are notified and dropped from game
+ (maybe) new warriors are spawned from bases
+
+each round players will be given the following information:
+ location of players warriors
+ location of observable warriors from opposing teams
+ location of observable bases from opposing teams
+ warriors which died in the last round
