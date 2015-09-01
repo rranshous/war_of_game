@@ -19,11 +19,13 @@ class BattleRoyalSimulation
       spawn_warriors
       announce_round_to_players
       reset_killed_warriors
+      reset_killed_bases
       wait_for_players_to_respond
       move_warriors
       fight_warriors
       reap_dead_warriors
       fight_warriors_and_bases
+      reap_dead_bases
       notify_dead_players
     end
   end
@@ -48,13 +50,19 @@ class BattleRoyalSimulation
   end
 
   def only_one_teams_base_alive?
+    @bases.length <= 1
   end
 
   def only_one_teams_warriors_alive?
+    @warriors.map { |(player, _), _| player }.uniq.length <= 1
   end
 
   def reset_killed_warriors
     @killed_warriors = []
+  end
+
+  def reset_killed_bases
+    @killed_bases = []
   end
 
   def wait_for_players_to_respond
@@ -62,11 +70,6 @@ class BattleRoyalSimulation
     @next_moves = @players.map(&:next_moves)
   end
 
-  def move_warriors
-    @next_moves.zip(@players).each_with_index do |players_moves, player, i|
-      move_warriors(player, moves)
-    end
-  end
 
   def fight_warriors
     @killed_warriors += player_locations
@@ -76,8 +79,9 @@ class BattleRoyalSimulation
   end
 
   def fight_warriors_and_bases
-    @killed_bases += @bases.zip(@players).select do |base_location, player|
-    end
+    @killed_bases += @bases.select{ |bp, bl|
+                        @warriors.detect{ |(wp, _), wl| wp != bp && wl == bl } }
+                        .keys
   end
 
   def reap_dead_warriors
@@ -86,10 +90,22 @@ class BattleRoyalSimulation
     end
   end
 
+  def reap_dead_bases
+    @killed_bases.each do |player|
+      @bases.delete player
+    end
+  end
+
+  def move_warriors
+    @next_moves.zip(@players).each_with_index do |players_moves, player, i|
+      move_players_warriors(player, moves)
+    end
+  end
+
   # TODO: verify moves
-  def move_warriors player, moves
+  def move_players_warriors player, moves
     moves.each do |warrior_id, new_x, new_y|
-      @warriors[[player,warrior_id]].location = [new_x, new_y]
+      @warriors[[player,warrior_id]] = [new_x, new_y]
     end
   end
 
