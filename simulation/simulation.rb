@@ -6,15 +6,17 @@ class BattleRoyalSimulation
     @board_size = [100, 100]
     @num_of_warriors = 20
     @max_game_length = 1000
-    @bases = random_base_positions
     @tick_time = 1
     @next_moves = []
-    @warriors ={}
+    @warriors = {}
+    @bases = {}
     @killed_warriors = []
+    place_random_bases
   end
 
   def tick
     while !game_over?
+      spawn_warriors
       announce_round_to_players
       reset_killed_warriors
       wait_for_players_to_respond
@@ -74,7 +76,7 @@ class BattleRoyalSimulation
   end
 
   def fight_warriors_and_bases
-    @bases = @bases.zip(@players).select do |base_location, player|
+    @killed_bases += @bases.zip(@players).select do |base_location, player|
     end
   end
 
@@ -99,12 +101,16 @@ class BattleRoyalSimulation
     end
   end
 
-  def random_base_positions
-    @players.reduce([]) do |base_positions, _|
-      begin
-        loc = [rand(0..@board_size[0]), rand(0..@board_size[1])]
-      end until !base_positions.include?(loc)
-      base_positions + [loc]
-    end
+  def place_random_bases
+    @bases = Hash[
+      @players.zip(
+        @players.reduce([]) do |base_positions, _|
+          begin
+            loc = [rand(0..@board_size[0]), rand(0..@board_size[1])]
+          end until !base_positions.include?(loc)
+          base_positions + [loc]
+        end
+      )
+    ]
   end
 end
