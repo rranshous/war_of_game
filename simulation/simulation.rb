@@ -2,20 +2,21 @@
 
 class BattleRoyalSimulation
   def initialize players
+    @round = 0
     @players = players
     @board_size = [100, 100]
     @num_of_warriors = 20
     @max_game_length = 1000
     @tick_time = 1
     @next_moves = []
-    @warriors = {}
-    @bases = {}
-    @killed_warriors = []
+    @warriors = {} # [player,warrior_id] = [x,y]
+    @bases = {} # [player] = [x,y]
+    @killed_warriors = [] # [player,warrior_id]
     place_random_bases
   end
 
   def tick
-    while !game_over?
+    if !game_over?
       spawn_warriors
       announce_round_to_players
       reset_killed_warriors
@@ -28,21 +29,47 @@ class BattleRoyalSimulation
       reap_dead_bases
       notify_dead_players
     end
+    @round += 1
+  end
+
+  def print_board
+    board = {}
+    @bases.each do |player, loc|
+      board[loc] = 'B'
+    end
+    @warriors.each do |_, loc|
+      board[loc] = 'W'
+    end
+    puts "BOARD:"
+    0.upto(@board_size[1]) do |y|
+      0.upto(@board_size[0]) do |x|
+        print board[[x,y]] || '.'
+      end
+      puts
+    end
+    puts
   end
 
   private
+
+  def spawn_warriors
+    @bases.each do |player, (x,y)|
+      @warriors[[player,round]] = [x, y]
+    end
+  end
 
   def announce_round_to_players
     @players.each do |player|
       player.announce_round(warriors_for(player),
                             enemies_warriors_of(player),
                             enemy_bases_of(player),
-                            recently_dead_warriors_for(player))
-
+                            recently_dead_warriors)
     end
   end
 
+  # TODO: send game state
   def notify_dead_players
+    @players.each(&:die)
   end
 
   def game_over?
@@ -65,8 +92,9 @@ class BattleRoyalSimulation
     @killed_bases = []
   end
 
+  # TODO: send game state
   def wait_for_players_to_respond
-    sleep 1
+    sleep @tick_time
     @next_moves = @players.map(&:next_moves)
   end
 
@@ -104,7 +132,7 @@ class BattleRoyalSimulation
 
   # TODO: verify moves
   def move_players_warriors player, moves
-    moves.each do |warrior_id, new_x, new_y|
+    moves.each do |(warrior_id, new_x, new_y)|
       @warriors[[player,warrior_id]] = [new_x, new_y]
     end
   end

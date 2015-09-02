@@ -8,6 +8,7 @@ a game will end when there is only one teams base
  or one teams warriors alive
 each team will have a fixed # of warriors spawned from their
  base
+warriors spawn over the base (keep other warriors clear)
 
 a game has the following attrs:
  board size
