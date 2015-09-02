@@ -94,8 +94,17 @@ class BattleRoyalSimulation
 
   # TODO: send game state
   def wait_for_players_to_respond
+    moves = Queue.new
+    threads = @players.map do |player|
+      Thread.new(p, moves) do |p,r|
+        p.next_moves.each { |m| r << [p, m] }
+      end
+    end
     sleep @tick_time
-    @next_moves = @players.map(&:next_moves)
+    threads.each{ |t| Thread.kill(t); t.join }
+    [].tap do |next_moves|
+      next_moves << queue.shift
+    end
   end
 
 
