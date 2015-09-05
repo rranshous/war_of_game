@@ -18,12 +18,12 @@ class BattleRoyalSimulation
     spawn_warriors if @round < @max_warriors
     announce_round_to_players
     collect_players_moves
+    reap_dead_warriors
     reset_killed_warriors
     reset_killed_bases
     move_warriors
     reset_pending_moves
     fight_warriors
-    reap_dead_warriors
     fight_warriors_and_bases
     reap_dead_bases
     notify_dead_players
@@ -83,15 +83,20 @@ class BattleRoyalSimulation
     #[pid, [x, y]]
     @warriors
       .select{ |((p, _), _)| p != player }
-      .map{ |((_, id), loc)| [id, loc] }
+      .map{ |((p, _), loc)| [@players.index(p), loc] }
   end
 
   def enemy_bases_of player
     #[pid, [x, y]]
+    @bases.select{ |p,l| p != player }
+          .map{ |p,l| [@players.index(p), l] }
   end
 
   def recently_dead_warriors
     #[pid, [x, y]]
+    @killed_warriors.map do |(player, wid)|
+      [@players.index(player), @warriors[[player,wid]]]
+    end
   end
 
   # TODO: send game state
@@ -161,7 +166,10 @@ class BattleRoyalSimulation
   # TODO: verify moves
   def move_players_warriors player, moves
     moves.each do |(warrior_id, (new_x, new_y))|
-      @warriors[[player,warrior_id]] = [new_x, new_y]
+      @warriors[[player,warrior_id]] = [
+        [[0, new_x].max, @board_size[0]].min,
+        [[0, new_y].max, @board_size[1]].min
+      ]
     end
   end
 
