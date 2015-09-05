@@ -6,7 +6,7 @@ class PlayerShim
     @to_player, @from_player = to_player, from_player
   end
 
-  def announce_round player_warriors, enemy_warriors, enemy_bases, dead_warriors
+  def round_started player_warriors, enemy_warriors, enemy_bases, dead_warriors
     @to_player.puts 'start round'
     player_warriors.each do |id, (x, y)|
       @to_player.puts "w #{id} #{x} #{y}"
@@ -23,16 +23,22 @@ class PlayerShim
   end
 
   def die
-    @to_player.puts "died"
+    @to_player.puts "gameover died"
   end
 
+  def win
+    @to_player.puts "gameover win"
+  end
+
+  # TODO: clear out moves sent in the last round
+  # but which were sent after the 1s cutoff
   def next_moves
     Enumerator.new do |yielder|
       @from_player.each_line do |line|
         line = line.chomp
         break if line == 'done'
         _, id, x, y = line.split
-        yielder << [id, x, y]
+        yielder << [id, [x, y]]
       end
     end
   end

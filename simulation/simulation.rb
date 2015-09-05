@@ -4,11 +4,10 @@ class BattleRoyalSimulation
   def initialize players
     @round = 0
     @players = players
-    @board_size = [100, 100]
-    @num_of_warriors = 20
-    @max_game_length = 1000
+    @board_size = [20, 20]
+    @max_warriors = 20
     @tick_time = 1
-    @next_moves = []
+    @next_moves = [] # [[[wid,[x,y]]] ordered as players are
     @warriors = {} # [player,warrior_id] = [x,y]
     @bases = {} # [player] = [x,y]
     @killed_warriors = [] # [player,warrior_id]
@@ -16,19 +15,19 @@ class BattleRoyalSimulation
   end
 
   def tick
-    if !game_over?
-      spawn_warriors
-      announce_round_to_players
-      reset_killed_warriors
-      reset_killed_bases
-      wait_for_players_to_respond
-      move_warriors
-      fight_warriors
-      reap_dead_warriors
-      fight_warriors_and_bases
-      reap_dead_bases
-      notify_dead_players
-    end
+    spawn_warriors if @round < @max_warriors
+    announce_round_to_players
+    collect_players_moves
+    reset_killed_warriors
+    reset_killed_bases
+    move_warriors
+    reset_pending_moves
+    fight_warriors
+    reap_dead_warriors
+    fight_warriors_and_bases
+    reap_dead_bases
+    notify_dead_players
+    notify_winners
     @round += 1
   end
 
@@ -40,7 +39,6 @@ class BattleRoyalSimulation
     @warriors.each do |_, loc|
       board[loc] = 'W'
     end
-    puts "BOARD:"
     0.upto(@board_size[1]) do |y|
       0.upto(@board_size[0]) do |x|
         print board[[x,y]] || '.'
@@ -50,30 +48,60 @@ class BattleRoyalSimulation
     puts
   end
 
+  def game_over?
+    puts "only_one_teams_base_alive?: #{only_one_teams_base_alive?}"
+    puts "only_one_teams_warriors_alive?: #{only_one_teams_warriors_alive?}"
+    only_one_teams_base_alive? || only_one_teams_warriors_alive?
+  end
+
+
   private
 
   def spawn_warriors
     @bases.each do |player, (x,y)|
-      @warriors[[player,round]] = [x, y]
+      @warriors[[player,@round]] = [x, y]
     end
   end
 
   def announce_round_to_players
     @players.each do |player|
-      player.announce_round(warriors_for(player),
-                            enemies_warriors_of(player),
-                            enemy_bases_of(player),
-                            recently_dead_warriors)
+      player.round_started(warriors_of(player),
+                           enemy_warriors_of(player),
+                           enemy_bases_of(player),
+                           recently_dead_warriors)
     end
+  end
+
+  def warriors_of player
+    @warriors
+      .select{ |(p, _), _| p == player }
+      .to_a
+      .map{ |((_, id), loc)| [id, loc] }
+  end
+
+  def enemy_warriors_of player
+    #[pid, [x, y]]
+    @warriors
+      .select{ |((p, _), _)| p != player }
+      .map{ |((_, id), loc)| [id, loc] }
+  end
+
+  def enemy_bases_of player
+    #[pid, [x, y]]
+  end
+
+  def recently_dead_warriors
+    #[pid, [x, y]]
   end
 
   # TODO: send game state
   def notify_dead_players
-    @players.each(&:die)
+    @killed_bases.each(&:die)
   end
 
-  def game_over?
-    only_one_teams_base_alive? || only_one_teams_warriors_alive?
+  # TODO: send game state
+  def notify_winners
+    @killed_bases.each(&:win)
   end
 
   def only_one_teams_base_alive?
@@ -92,21 +120,10 @@ class BattleRoyalSimulation
     @killed_bases = []
   end
 
-  # TODO: send game state
-  def wait_for_players_to_respond
-    moves = Queue.new
-    threads = @players.map do |player|
-      Thread.new(p, moves) do |p,r|
-        p.next_moves.each { |m| r << [p, m] }
-      end
-    end
-    sleep @tick_time
-    threads.each{ |t| Thread.kill(t); t.join }
-    [].tap do |next_moves|
-      next_moves << queue.shift
-    end
+  def collect_players_moves
+    @next_moves = @players.map{ |p| p.next_moves.to_a }
+    puts "NextMoves: #{@next_moves}"
   end
-
 
   def fight_warriors
     @killed_warriors += player_locations
@@ -134,14 +151,20 @@ class BattleRoyalSimulation
   end
 
   def move_warriors
-    @next_moves.zip(@players).each_with_index do |players_moves, player, i|
-      move_players_warriors(player, moves)
+    require 'pry';binding.pry
+    @next_moves.zip(@players).each do |players_moves, player|
+      move_players_warriors(player, players_moves)
     end
+  end
+
+  def reset_pending_moves
+    @next_moves = []
   end
 
   # TODO: verify moves
   def move_players_warriors player, moves
-    moves.each do |(warrior_id, new_x, new_y)|
+    moves.each do |(warrior_id, (new_x, new_y))|
+      puts "Making move: #{player} #{warrior_id} [#{new_x}, #{new_y}]"
       @warriors[[player,warrior_id]] = [new_x, new_y]
     end
   end
