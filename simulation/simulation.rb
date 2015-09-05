@@ -122,14 +122,12 @@ class BattleRoyalSimulation
 
   def collect_players_moves
     @next_moves = @players.map{ |p| p.next_moves.to_a }
-    puts "NextMoves: #{@next_moves}"
   end
 
   def fight_warriors
     @killed_warriors += player_locations
                           .select{ |l, wds| wds.length > 1 }
-                          .map{ |l, wds| wds - wds.sample(1) }
-                          .flatten
+                          .flat_map{ |l, wds| wds - wds.sample(1) }
   end
 
   def fight_warriors_and_bases
@@ -151,7 +149,6 @@ class BattleRoyalSimulation
   end
 
   def move_warriors
-    require 'pry';binding.pry
     @next_moves.zip(@players).each do |players_moves, player|
       move_players_warriors(player, players_moves)
     end
@@ -164,7 +161,6 @@ class BattleRoyalSimulation
   # TODO: verify moves
   def move_players_warriors player, moves
     moves.each do |(warrior_id, (new_x, new_y))|
-      puts "Making move: #{player} #{warrior_id} [#{new_x}, #{new_y}]"
       @warriors[[player,warrior_id]] = [new_x, new_y]
     end
   end
