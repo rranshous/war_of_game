@@ -1,6 +1,8 @@
 
 
 class BattleRoyalSimulation
+  attr_reader :round
+
   def initialize players
     @round = 0
     @players = players
@@ -56,6 +58,9 @@ class BattleRoyalSimulation
     only_one_teams_base_alive? || only_one_teams_warriors_alive?
   end
 
+  def winner
+    @players.index @bases.keys.first
+  end
 
   private
 

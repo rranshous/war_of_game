@@ -20,10 +20,12 @@ class Player
 
   def die
     @game_over = :LOSE
+    puts "player LOST"
   end
 
   def win
     @game_over = :WIN
+    puts "player WON"
   end
 
   def next_moves

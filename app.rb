@@ -2,10 +2,12 @@ require_relative 'simulation/simulation'
 require_relative 'player/player'
 require_relative 'player_shim/player_shim'
 require_relative 'player_shim/receiver'
+require_relative 'tournament/tournament'
+
 require 'thread'
+Thread.abort_on_exception = true
 
 mode = ARGV.shift
-
 
 case mode
 when 'in-proc'
@@ -32,7 +34,6 @@ when 'in-proc-streams'
   end
 
   sim = BattleRoyalSimulation.new player_shims
-  Thread.abort_on_exception = true
   rthreads = player_shim_receivers.map do |player_receiver|
     Thread.new(player_receiver) { |pr| loop { pr.tick } }
   end
@@ -46,4 +47,12 @@ when 'in-proc-streams'
   sleep 0.5
   puts "killing threads"
   rthreads.each{ |t| Thread.kill(t); t.join }
+
+when 'tournament'
+  player_commands = ARGV.to_a
+  puts "app creating tournament: #{player_commands.join('::')}"
+  tournament = Tournament.new player_commands
+  results = tournament.run
+  puts "RESULTS: #{results}"
 end
+

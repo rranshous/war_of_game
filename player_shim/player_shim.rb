@@ -31,8 +31,6 @@ class PlayerShim
     @to_player.puts "gameover win"
   end
 
-  # TODO: clear out moves sent in the last round
-  # but which were sent after the 1s cutoff
   def next_moves
     puts "player shim waiting on moves"
     Enumerator.new do |yielder|
