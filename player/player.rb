@@ -1,15 +1,20 @@
 
 
 class Player
-  def round_started player_warriors, enemy_warriors, enemy_bases, dead_warriors
+
+
+  def game_started base_locations
+    @base_locations = base_locations
+  end
+
+  def round_started player_warriors, enemy_warriors, dead_warriors
     puts "Round Started"
     @current_warriors = player_warriors
     puts "current_warriors: #{@current_warriors}"
     @enemy_warriors = enemy_warriors
     puts "enemy_warriors: #{@enemy_warriors}"
-    @enemy_bases = enemy_bases
-    puts "enemy_bases: #{enemy_bases}"
     @dead_warriors = @dead_warriors
+    puts "dead_warriors: #{dead_warriors}"
     @game_over = false
   end
 

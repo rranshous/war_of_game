@@ -5,7 +5,7 @@ class BattleRoyalSimulation
     @round = 0
     @players = players
     @board_size = [20, 20]
-    @max_warriors = 20
+    @max_warriors = 5
     @tick_time = 1
     @next_moves = [] # [[[wid,[x,y]]] ordered as players are
     @warriors = {} # [player,warrior_id] = [x,y]

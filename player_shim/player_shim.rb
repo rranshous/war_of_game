@@ -6,20 +6,20 @@ class PlayerShim
     @to_player, @from_player = to_player, from_player
   end
 
-  def round_started player_warriors, enemy_warriors, enemy_bases, dead_warriors
-    @to_player.puts 'start round'
+  # TODO when does player get their bases location ?
+
+  def round_started player_warriors, enemy_warriors, dead_warriors
+    @to_player.puts 'round start'
     player_warriors.each do |id, (x, y)|
       @to_player.puts "w #{id} #{x} #{y}"
     end
     enemy_warriors.each do |(player_id, (x, y))|
       @to_player.puts "ew #{player_id} #{x} #{y}"
     end
-    enemy_bases.each do |player_id, (x, y)|
-      @to_player.puts "eb #{player_id} #{x} #{y}"
-    end
     dead_warriors.each do |(player_id, (x, y))|
       @to_player.puts "dw #{player_id} #{x} #{y}"
     end
+    @to_player.puts "round details end"
   end
 
   def die
