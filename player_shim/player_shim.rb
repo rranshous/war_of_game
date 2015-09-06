@@ -9,6 +9,7 @@ class PlayerShim
   # TODO when does player get their bases location ?
 
   def round_started player_warriors, enemy_warriors, dead_warriors
+    puts "player shim round start"
     @to_player.puts 'round start'
     player_warriors.each do |id, (x, y)|
       @to_player.puts "w #{id} #{x} #{y}"
@@ -33,11 +34,16 @@ class PlayerShim
   # TODO: clear out moves sent in the last round
   # but which were sent after the 1s cutoff
   def next_moves
+    puts "player shim waiting on moves"
     Enumerator.new do |yielder|
       @from_player.each_line do |line|
         line = line.chomp
-        break if line == 'done'
-        _, id, x, y = line.split
+        if line == 'done'
+          puts "player shim done receiving moves"
+          break
+        end
+        _, id, x, y = line.split[1..-1]
+        x, y = [x, y].map(&:to_i)
         yielder << [id, [x, y]]
       end
     end

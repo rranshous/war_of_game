@@ -15,6 +15,7 @@ class BattleRoyalSimulation
   end
 
   def tick
+    puts 'simulation ticking'
     spawn_warriors if @round < @max_warriors
     announce_round_to_players
     collect_players_moves
@@ -29,6 +30,7 @@ class BattleRoyalSimulation
     notify_dead_players
     notify_winners
     @round += 1
+    puts 'simulation round end'
   end
 
   def print_board
@@ -64,10 +66,10 @@ class BattleRoyalSimulation
   end
 
   def announce_round_to_players
+    puts "simulation round start"
     @players.each do |player|
       player.round_started(warriors_of(player),
                            enemy_warriors_of(player),
-                           enemy_bases_of(player),
                            recently_dead_warriors)
     end
   end
@@ -84,12 +86,6 @@ class BattleRoyalSimulation
     @warriors
       .select{ |((p, _), _)| p != player }
       .map{ |((p, _), loc)| [@players.index(p), loc] }
-  end
-
-  def enemy_bases_of player
-    #[pid, [x, y]]
-    @bases.select{ |p,l| p != player }
-          .map{ |p,l| [@players.index(p), l] }
   end
 
   def recently_dead_warriors

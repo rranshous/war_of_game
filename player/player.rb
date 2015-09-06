@@ -8,7 +8,7 @@ class Player
   end
 
   def round_started player_warriors, enemy_warriors, dead_warriors
-    puts "Round Started"
+    puts "player Round Started"
     @current_warriors = player_warriors
     puts "current_warriors: #{@current_warriors}"
     @enemy_warriors = enemy_warriors
@@ -27,6 +27,7 @@ class Player
   end
 
   def next_moves
+    puts "player giving moves"
     Enumerator.new do |yielder|
       @current_warriors.each do |(id, (x, y))|
         yielder << [id, [x+rand(-1..1), y+rand(-1..1)]]
