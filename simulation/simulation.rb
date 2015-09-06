@@ -127,7 +127,9 @@ class BattleRoyalSimulation
   end
 
   def collect_players_moves
+    puts "simulation calling for moves"
     @next_moves = @players.map{ |p| p.next_moves.to_a }
+    puts "simulation has moves"
   end
 
   def fight_warriors

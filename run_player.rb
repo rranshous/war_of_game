@@ -10,4 +10,5 @@ receiver = Receiver.new from_sim, to_sim, player
 puts "receiver starting"
 loop do
   receiver.tick
+  to_sim.flush
 end

@@ -10,11 +10,11 @@ class Player
   def round_started player_warriors, enemy_warriors, dead_warriors
     puts "player Round Started"
     @current_warriors = player_warriors
-    puts "current_warriors: #{@current_warriors}"
+    puts "player current_warriors: #{@current_warriors}"
     @enemy_warriors = enemy_warriors
-    puts "enemy_warriors: #{@enemy_warriors}"
+    puts "player enemy_warriors: #{@enemy_warriors}"
     @dead_warriors = @dead_warriors
-    puts "dead_warriors: #{dead_warriors}"
+    puts "player dead_warriors: #{dead_warriors}"
     @game_over = false
   end
 

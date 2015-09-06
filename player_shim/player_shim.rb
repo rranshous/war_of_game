@@ -35,6 +35,7 @@ class PlayerShim
     puts "player shim waiting on moves"
     Enumerator.new do |yielder|
       @from_player.each_line do |line|
+        puts "player shim received line: #{line}"
         line = line.chomp
         if line == 'done'
           puts "player shim done receiving moves"

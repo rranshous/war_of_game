@@ -8,9 +8,11 @@ class Tournament
   def run
     results = []
     @players.combination(2).each do |players|
-      puts "tournament player combo: #{players.join("::")}"
-      winner, rounds = self.class.run_sim players
-      results << [winner, players, rounds]
+      10.times do
+        puts "tournament player combo: #{players.join("::")}"
+        winner, rounds = self.class.run_sim players
+        results << [winner, players, rounds]
+      end
     end
     results
   end
@@ -29,12 +31,10 @@ class Tournament
       player_shims << shim
     end
 
-    sleep 1
-    check_all_players_alive! player_threads
-
     puts "tournament starting sim"
     sim = BattleRoyalSimulation.new player_shims
     begin
+      puts "tournament ticking"
       check_all_players_alive! player_threads
       sim.tick
     end while !sim.game_over?
@@ -43,7 +43,7 @@ class Tournament
     player_threads.each do |pthread|
       Process.kill("KILL", pthread.pid)
     end
-    return [players[sim.winner], sim.round]
+    return [sim.winner, sim.round]
   end
 
   def self.check_all_players_alive! player_threads
