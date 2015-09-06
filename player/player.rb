@@ -30,7 +30,9 @@ class Player
     puts "player giving moves"
     Enumerator.new do |yielder|
       @current_warriors.each do |(id, (x, y))|
-        yielder << [id, [x+rand(-1..1), y+rand(-1..1)]]
+        move = [id, [x+rand(-1..1), y+rand(-1..1)]]
+        puts "player move: #{move}"
+        yielder << move
       end
     end
   end

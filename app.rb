@@ -42,9 +42,8 @@ when 'in-proc-streams'
   begin
     sim.tick
     sim.print_board
-    puts "WAITING ON INPUT"
-    gets
   end while !sim.game_over?
+  sleep 0.5
   puts "killing threads"
   rthreads.each{ |t| Thread.kill(t); t.join }
 end

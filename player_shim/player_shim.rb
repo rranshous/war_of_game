@@ -42,7 +42,8 @@ class PlayerShim
           puts "player shim done receiving moves"
           break
         end
-        _, id, x, y = line.split[1..-1]
+        puts "player shim received line: #{line}"
+        _, id, x, y = line.split
         x, y = [x, y].map(&:to_i)
         yielder << [id, [x, y]]
       end
