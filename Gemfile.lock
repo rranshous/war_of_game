@@ -1,5 +1,6 @@
-PATH
-  remote: ../darwinning
+GIT
+  remote: https://github.com/rranshous/darwinning.git
+  revision: d78dea991217c01c3c7dc9dc21ea8f8a6b1780b4
   specs:
     darwinning (0.0.3)
 

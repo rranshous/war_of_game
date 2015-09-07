@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
-gem 'darwinning', path: '../darwinning'
+gem 'darwinning', git: 'https://github.com/rranshous/darwinning.git'
 gem 'rspec'
 gem 'pry'
