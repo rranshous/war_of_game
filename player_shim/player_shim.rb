@@ -6,7 +6,14 @@ class PlayerShim
     @to_player, @from_player = to_player, from_player
   end
 
-  # TODO when does player get their bases location ?
+  def game_started base_location, enemy_base_locations
+    @to_player.puts 'game start'
+    @to_player.puts "b #{base_location[0]} #{base_location[1]}"
+    enemy_base_locations.each do |pid, (x, y)|
+      @to_player.puts "eb #{pid} #{x} #{y}"
+    end
+    @to_player.puts 'game details end'
+  end
 
   def round_started player_warriors, enemy_warriors, dead_warriors
     puts "player shim round start"

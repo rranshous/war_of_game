@@ -12,6 +12,9 @@ class Receiver
     line = @from_sim.gets.chomp
     line_pieces = line.split
     case line
+    when 'game start'
+      @player.game_started(*self.class.compile_game_details(@from_sim))
+
     when 'round start'
       puts "receiver round start"
       @player.round_started(*self.class.compile_round_details(@from_sim))
@@ -21,16 +24,39 @@ class Receiver
       end
       puts "receiver done giving moves"
       @to_sim.puts "done"
+
     when /^gameover.*/
       @player.die if line_pieces.last == 'died'
       @player.win if line_pieces.last == 'win'
+
     else
       raise "unknown command: #{line}"
     end
   end
 
-
   private
+
+  def self.compile_game_details data_stream
+    base_location = [0, 0]
+    enemy_base_locations = []
+
+    loop do
+      line = data_stream.gets.chomp
+      line_pieces = line.split
+      case line_pieces.first
+      when 'game'
+        if line == 'game details end'
+          return [ base_location, enemy_base_locations ]
+        end
+      when 'b'
+        x, y = line_pieces[1..-1].map(&:to_i)
+        base_location = [x, y]
+      when 'eb'
+        pid, x, y = line_pieces[1..-1].map(&:to_i)
+        enemy_base_locations << [pid, [x, y]]
+      end
+    end
+  end
 
   def self.compile_round_details data_stream
     warriors = []
@@ -49,8 +75,8 @@ class Receiver
         wid, x, y = line_pieces[1..-1].map(&:to_i)
         warriors << [wid, [x, y]]
       when 'ew'
-        wid, x, y = line_pieces[1..-1].map(&:to_i)
-        enemy_warriors << [wid, [x, y]]
+        pid, x, y = line_pieces[1..-1].map(&:to_i)
+        enemy_warriors << [pid, [x, y]]
       when 'dw'
         pid, x, y = line_pieces[1..-1]
         x, y = [x, y].map(&:to_i)

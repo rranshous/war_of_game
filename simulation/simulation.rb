@@ -14,6 +14,7 @@ class BattleRoyalSimulation
     @bases = {} # [player] = [x,y]
     @killed_warriors = [] # [player,warrior_id]
     place_random_bases
+    announce_start_to_players
   end
 
   def tick
@@ -67,6 +68,15 @@ class BattleRoyalSimulation
   def spawn_warriors
     @bases.each do |player, (x,y)|
       @warriors[[player,@round]] = [x, y]
+    end
+  end
+
+  def announce_start_to_players
+    puts "simulation game start"
+    @players.each do |player|
+      player.game_started @bases[player],
+                          @bases.select{ |p, l| p != player}.to_a
+                                .map{ |p, l| [@players.index(p), l] }
     end
   end
 

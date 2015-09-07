@@ -1,4 +1,6 @@
 require 'open3'
+require_relative '../simulation/simulation'
+require_relative '../player_shim/player_shim'
 
 class Tournament
   def initialize players
@@ -37,6 +39,8 @@ class Tournament
       puts "tournament ticking"
       check_all_players_alive! player_threads
       sim.tick
+      sim.print_board
+      gets
     end while !sim.game_over?
 
     puts "tournament killing children"
