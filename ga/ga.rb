@@ -25,26 +25,23 @@ class PlayerGrower < Darwinning::Organism
   def fitness
     # run tournament against random player, score how many
     # games lost
-    puts "ga fitness ticking"
-    random_player_exec = 'ruby ./run_player.rb random'
     this_player_exec = "ruby ./run_player.rb molded #{genotypes.join(' ')}"
-    tournament = Tournament.new [random_player_exec, this_player_exec]
+    random_player_exec = 'ruby ./run_player.rb random'
+    tournament = Tournament.new [this_player_exec, random_player_exec]
     results = tournament.run
-    loss_count = results.count{ |(w, _)| w == 0 }
+    loss_count = results.count{ |(w, _)| w != 0 }
     puts "ga score: #{loss_count}"
     return loss_count
   end
 end
 
 p = Darwinning::Population.new(
-    organism: PlayerGrower, population_size: 15,
-    fitness_goal: 0, generations_limit: 100
+    organism: PlayerGrower, population_size: 100,
+    fitness_goal: 0, generations_limit: 500
 )
 p.evolve!
-puts "ga done"
 
 p.best_member.nice_print # prints the member representing the solution
-puts "GENES: #{p.genes.zip(p.best_member.genotypes)}"
 
 puts
 puts "DONE"

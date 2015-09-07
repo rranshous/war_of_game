@@ -9,37 +9,27 @@ class Player
   def game_started base_location, enemy_base_locations
     @base_location = base_location
     @enemy_base_locations = enemy_base_locations
-    puts "player #{@name} base location: #{@base_location}"
-    puts "player #{@name} enemy base locations: #{@enemy_base_locations}"
   end
 
   def round_started player_warriors, enemy_warriors, dead_warriors
-    puts "player #{@name} Round Started"
     @current_warriors = player_warriors
-    puts "player #{@name} current_warriors: #{@current_warriors}"
     @enemy_warriors = enemy_warriors
-    puts "player #{@name} enemy_warriors: #{@enemy_warriors}"
     @dead_warriors = dead_warriors
-    puts "player #{@name} dead_warriors: #{dead_warriors}"
     @game_over = false
   end
 
   def die
     @game_over = :LOSE
-    puts "player #{@name} LOST"
   end
 
   def win
     @game_over = :WIN
-    puts "player #{@name} WON"
   end
 
   def next_moves
-    puts "player #{@name} giving moves"
     Enumerator.new do |yielder|
       @current_warriors.each do |(id, (x, y))|
         move = [id, [x+rand(-1..1), y+rand(-1..1)]]
-        puts "player #{@name} move: #{move}"
         yielder << move
       end
     end
@@ -74,11 +64,9 @@ class MoldablePlayer < Player
   end
 
   def next_moves
-    puts "player #{@player} giving moves"
     Enumerator.new do |yielder|
       @current_warriors.each do |(id, (x, y))|
         move = [ id, compute_move_from(x, y) ]
-        puts "player #{@player} move: #{move}"
         yielder << move
       end
     end

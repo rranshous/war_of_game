@@ -8,7 +8,6 @@ class Receiver
   end
 
   def tick
-    puts "receiver ticking"
     line = @from_sim.gets.chomp
     line_pieces = line.split
     case line
@@ -16,13 +15,10 @@ class Receiver
       @player.game_started(*self.class.compile_game_details(@from_sim))
 
     when 'round start'
-      puts "receiver round start"
       @player.round_started(*self.class.compile_round_details(@from_sim))
-      puts "receiver calling for moves"
       @player.next_moves.each do |(wid, (x, y))|
         @to_sim.puts "w #{wid} #{x} #{y}"
       end
-      puts "receiver done giving moves"
       @to_sim.puts "done"
 
     when /^gameover.*/

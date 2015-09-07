@@ -42,3 +42,10 @@ each round players will be given the following information:
  location of observable warriors from opposing teams
  location of observable bases from opposing teams
  warriors which died in the last round
+
+
+R
+3 x 3 [37, 73, 51, 87, 36, 40, 96, 56] => 2
+3 x 1 [46, 81, 44, 61, 77, 76, 52, 52] => 1
+15 x 100 [35, 36, 4, 39, 70, 6, 28, 69] => 0
+

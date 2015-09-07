@@ -16,7 +16,6 @@ class PlayerShim
   end
 
   def round_started player_warriors, enemy_warriors, dead_warriors
-    puts "player shim round start"
     @to_player.puts 'round start'
     player_warriors.each do |id, (x, y)|
       @to_player.puts "w #{id} #{x} #{y}"
@@ -39,16 +38,12 @@ class PlayerShim
   end
 
   def next_moves
-    puts "player shim waiting on moves"
     Enumerator.new do |yielder|
       @from_player.each_line do |line|
-        puts "player shim received line: #{line}"
         line = line.chomp
         if line == 'done'
-          puts "player shim done receiving moves"
           break
         end
-        puts "player shim received line: #{line}"
         _, id, x, y = line.split
         x, y = [x, y].map(&:to_i)
         yielder << [id, [x, y]]
