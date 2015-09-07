@@ -37,9 +37,14 @@ class PlayerGrower < Darwinning::Organism
 end
 
 p = Darwinning::Population.new(
-    organism: PlayerGrower, population_size: 10,
-    fitness_goal: 0, generations_limit: 10
+    organism: PlayerGrower, population_size: 15,
+    fitness_goal: 0, generations_limit: 100
 )
 p.evolve!
+puts "ga done"
 
 p.best_member.nice_print # prints the member representing the solution
+puts "GENES: #{p.genes.zip(p.best_member.genotypes)}"
+
+puts
+puts "DONE"

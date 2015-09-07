@@ -57,13 +57,13 @@ class MoldablePlayer < Player
       toward.call state[:enemy_base_locations].first[1]
     end,
     TOWARD_FRIENDLY_BASE: lambda do |state, toward|
-      toward.call state[:base_location]
+      toward.call state[:friendly_base_location]
     end,
     TOWARD_ENEMY_WARRIOR: lambda do |state, toward|
       toward.call state[:enemy_warriors].first[1]
     end,
     TOWARD_FRIENDLY_WARRIOR: lambda do |state, toward|
-      toward.call state[:friendly_warriors].first
+      toward.call state[:friendly_warriors].first[1]
     end
   }
 
@@ -115,5 +115,17 @@ class MoldablePlayer < Player
   private
 
   def self.toward start_loc, target_loc
+    [0,0].tap do |move|
+      if start_loc[0] > target_loc[0]
+        move[0] = -1
+      elsif start_loc[0] < target_loc[0]
+        move[0] = 1
+      end
+      if start_loc[1] > target_loc[1]
+        move[1] = -1
+      elsif start_loc[1] < target_loc[1]
+        move[1] = 1
+      end
+    end
   end
 end

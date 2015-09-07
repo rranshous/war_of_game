@@ -39,8 +39,6 @@ class Tournament
       puts "tournament ticking"
       check_all_players_alive! player_threads
       sim.tick
-      sim.print_board
-      gets
     end while !sim.game_over?
 
     puts "tournament killing children"
