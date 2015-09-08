@@ -68,9 +68,7 @@ class BattleRoyalSimulation
 
   def announce_start_to_players
     @players.each do |player|
-      player.game_started @bases[player],
-                          @bases.select{ |p, l| p != player}.to_a
-                                .map{ |p, l| [@players.index(p), l] }
+      player.game_started @bases[player]
     end
   end
 
@@ -78,7 +76,8 @@ class BattleRoyalSimulation
     @players.each do |player|
       player.round_started(warriors_of(player),
                            enemy_warriors_of(player),
-                           recently_dead_warriors)
+                           recently_dead_warriors,
+                           enemy_bases_of(player))
     end
   end
 
@@ -102,6 +101,12 @@ class BattleRoyalSimulation
       [@players.index(player), @warriors[[player,wid]]]
     end
   end
+
+  def enemy_bases_of player
+    @bases.select{ |p, l| p != player}.to_a
+          .map{ |p, l| [@players.index(p), l] }
+  end
+
 
   # TODO: send game state
   def notify_dead_players

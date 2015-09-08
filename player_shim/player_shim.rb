@@ -6,16 +6,13 @@ class PlayerShim
     @to_player, @from_player = to_player, from_player
   end
 
-  def game_started base_location, enemy_base_locations
+  def game_started base_location
     @to_player.puts 'game start'
     @to_player.puts "b #{base_location[0]} #{base_location[1]}"
-    enemy_base_locations.each do |pid, (x, y)|
-      @to_player.puts "eb #{pid} #{x} #{y}"
-    end
     @to_player.puts 'game details end'
   end
 
-  def round_started player_warriors, enemy_warriors, dead_warriors
+  def round_started player_warriors, enemy_warriors, dead_warriors, enemy_bases
     @to_player.puts 'round start'
     player_warriors.each do |id, (x, y)|
       @to_player.puts "w #{id} #{x} #{y}"
@@ -25,6 +22,9 @@ class PlayerShim
     end
     dead_warriors.each do |(player_id, (x, y))|
       @to_player.puts "dw #{player_id} #{x} #{y}"
+    end
+    enemy_bases.each do |player_id, (x, y)|
+      @to_player.puts "eb #{player_id} #{x} #{y}"
     end
     @to_player.puts "round details end"
   end

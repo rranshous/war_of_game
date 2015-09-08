@@ -34,7 +34,6 @@ class Receiver
 
   def self.compile_game_details data_stream
     base_location = [0, 0]
-    enemy_base_locations = []
 
     loop do
       line = data_stream.gets.chomp
@@ -42,14 +41,11 @@ class Receiver
       case line_pieces.first
       when 'game'
         if line == 'game details end'
-          return [ base_location, enemy_base_locations ]
+          return [ base_location ]
         end
       when 'b'
         x, y = line_pieces[1..-1].map(&:to_i)
         base_location = [x, y]
-      when 'eb'
-        pid, x, y = line_pieces[1..-1].map(&:to_i)
-        enemy_base_locations << [pid, [x, y]]
       end
     end
   end
@@ -58,6 +54,7 @@ class Receiver
     warriors = []
     enemy_warriors = []
     dead_warriors = []
+    enemy_base_locations = []
 
     loop do
       line = data_stream.gets.chomp
@@ -65,7 +62,7 @@ class Receiver
       case line_pieces.first
       when 'round'
         if line == 'round details end'
-          return [ warriors, enemy_warriors, dead_warriors ]
+          return [ warriors, enemy_warriors, dead_warriors, enemy_base_locations]
         end
       when 'w'
         wid, x, y = line_pieces[1..-1].map(&:to_i)
@@ -77,6 +74,9 @@ class Receiver
         pid, x, y = line_pieces[1..-1]
         x, y = [x, y].map(&:to_i)
         dead_warriors << [pid, [x, y]]
+      when 'eb'
+        pid, x, y = line_pieces[1..-1].map(&:to_i)
+        enemy_base_locations << [pid, [x, y]]
       end
     end
   end

@@ -6,15 +6,15 @@ class Player
   end
 
   # TODO
-  def game_started base_location, enemy_base_locations
+  def game_started base_location
     @base_location = base_location
-    @enemy_base_locations = enemy_base_locations
   end
 
-  def round_started player_warriors, enemy_warriors, dead_warriors
+  def round_started player_warriors, enemy_warriors, dead_warriors, enemy_bases
     @current_warriors = player_warriors
     @enemy_warriors = enemy_warriors
     @dead_warriors = dead_warriors
+    @enemy_base_locations = enemy_bases
     @game_over = false
   end
 
