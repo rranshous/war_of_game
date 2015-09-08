@@ -9,7 +9,7 @@ class BattleRoyalSimulation
     @board_size = [20, 20]
     @max_warriors = 5
     @tick_time = 1
-    @view_distance = 3
+    @view_distance = 5
     @next_moves = [] # [[[wid,[x,y]]] ordered as players are
     @warriors = {} # [player,warrior_id] = [x,y]
     @bases = {} # [player] = [x,y]
@@ -39,9 +39,8 @@ class BattleRoyalSimulation
     @bases.each do |player, loc|
       board[loc] = 'B'
     end
-    @warriors.each do |p, loc|
-      board[loc] = 'W'
-      #board[loc] = @players.index(p)
+    @warriors.each do |((p, _), loc)|
+      board[loc] = @players.index(p) || 'W'
     end
     0.upto(@board_size[1]) do |y|
       0.upto(@board_size[0]) do |x|
@@ -114,6 +113,7 @@ class BattleRoyalSimulation
     warriors_of(player).detect do |_, wloc|
       dx, dy = [ploc[0] - wloc[0], ploc[1] - wloc[1]]
       dist = Math.sqrt(dx*dx + dy*dy)
+      puts "simulation #{@players.index(player)} dist: #{dist}"
       dist <= @view_distance
     end
   end
