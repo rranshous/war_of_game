@@ -11,6 +11,8 @@ when 'random'
   player = Player.new 'random'
 when 'molded'
   player = MoldablePlayer.new 'molded', ARGV.to_a.map(&:to_i)
+when 'striking'
+  player = StrikingPlayer.new 'striking'
 else
   player = Player.new 'default'
 end

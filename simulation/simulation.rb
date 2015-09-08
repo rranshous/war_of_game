@@ -30,7 +30,6 @@ class BattleRoyalSimulation
     fight_warriors_and_bases
     reap_dead_bases
     notify_dead_players
-    notify_winners
     @round += 1
   end
 
@@ -56,7 +55,7 @@ class BattleRoyalSimulation
   end
 
   def winner
-    @players.index @bases.keys.first
+    @players.index(@bases.keys.first) || @players.index(@warriors.first[0])
   end
 
   private
@@ -109,17 +108,13 @@ class BattleRoyalSimulation
     @killed_bases.each(&:die)
   end
 
-  # TODO: send game state
-  def notify_winners
-    @killed_bases.each(&:win)
-  end
-
   def only_one_teams_base_alive?
-    @bases.length <= 1
+    @bases.length <= 1 ?  @bases.keys.first : nil
   end
 
   def only_one_teams_warriors_alive?
-    @warriors.map { |(player, _), _| player }.uniq.length <= 1
+    live_players = @warriors.map { |(player, _), _| player }.uniq
+    live_players.length <= 1 ? live_players.first : nil
   end
 
   def reset_killed_warriors

@@ -34,6 +34,41 @@ class Player
       end
     end
   end
+
+  private
+
+  def constrain mv
+    mv[0] = [-1, [1, mv[0]].min].max
+    mv[1] = [-1, [1, mv[1]].min].max
+  end
+
+  def self.toward start_loc, target_loc
+    [0,0].tap do |move|
+      if start_loc[0] > target_loc[0]
+        move[0] = -1
+      elsif start_loc[0] < target_loc[0]
+        move[0] = 1
+      end
+      if start_loc[1] > target_loc[1]
+        move[1] = -1
+      elsif start_loc[1] < target_loc[1]
+        move[1] = 1
+      end
+    end
+  end
+end
+
+# head for base, do not stop at go
+class StrikingPlayer < Player
+  def next_moves
+    Enumerator.new do |yielder|
+      @current_warriors.each do |(id, (x, y))|
+        move_mag = self.class.toward([x,y], @enemy_base_locations.first[1])
+        move = [id, [x+move_mag[0], y+move_mag[1]]]
+        yielder << move
+      end
+    end
+  end
 end
 
 class MoldablePlayer < Player
@@ -95,25 +130,4 @@ class MoldablePlayer < Player
     [x+move_mag[0], y+move_mag[1]]
   end
 
-  def constrain mv
-    mv[0] = [-1, [1, mv[0]].min].max
-    mv[1] = [-1, [1, mv[1]].min].max
-  end
-
-  private
-
-  def self.toward start_loc, target_loc
-    [0,0].tap do |move|
-      if start_loc[0] > target_loc[0]
-        move[0] = -1
-      elsif start_loc[0] < target_loc[0]
-        move[0] = 1
-      end
-      if start_loc[1] > target_loc[1]
-        move[1] = -1
-      elsif start_loc[1] < target_loc[1]
-        move[1] = 1
-      end
-    end
-  end
 end

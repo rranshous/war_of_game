@@ -26,18 +26,26 @@ class PlayerGrower < Darwinning::Organism
     # run tournament against random player, score how many
     # games lost
     this_player_exec = "ruby ./run_player.rb molded #{genotypes.join(' ')}"
+    striking_player_exec = 'ruby ./run_player.rb striking'
     random_player_exec = 'ruby ./run_player.rb random'
-    tournament = Tournament.new [this_player_exec, random_player_exec]
+    tournament = Tournament.new [this_player_exec, striking_player_exec, random_player_exec]
     results = tournament.run
-    loss_count = results.count{ |(w, _)| w != 0 }
+    loss_count = results.count do |(winner, players)|
+      i = players.index(this_player_exec)
+      i && i != winner
+    end
     puts "ga score: #{loss_count}"
     return loss_count
   end
 end
 
+population_size = (ARGV.shift || 10).to_i
+generation_limit = (ARGV.shift || 10).to_i
+puts "Running GA; pop #{population_size} gens #{generation_limit}"
+
 p = Darwinning::Population.new(
-    organism: PlayerGrower, population_size: 100,
-    fitness_goal: 0, generations_limit: 500
+    organism: PlayerGrower, population_size: population_size,
+    fitness_goal: 0, generations_limit: generation_limit
 )
 p.evolve!
 
