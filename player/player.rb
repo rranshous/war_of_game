@@ -61,12 +61,16 @@ end
 # head for base, do not stop at go
 class StrikingPlayer < Player
   def next_moves
-    Enumerator.new do |yielder|
-      @current_warriors.each do |(id, (x, y))|
-        move_mag = self.class.toward([x,y], @enemy_base_locations.first[1])
-        move = [id, [x+move_mag[0], y+move_mag[1]]]
-        yielder << move
+    if @enemy_base_locations.length > 0
+      Enumerator.new do |yielder|
+        @current_warriors.each do |(id, (x, y))|
+          move_mag = self.class.toward([x,y], @enemy_base_locations.first[1])
+          move = [id, [x+move_mag[0], y+move_mag[1]]]
+          yielder << move
+        end
       end
+    else
+      super
     end
   end
 end

@@ -9,6 +9,7 @@ class BattleRoyalSimulation
     @board_size = [20, 20]
     @max_warriors = 5
     @tick_time = 1
+    @view_distance = 3
     @next_moves = [] # [[[wid,[x,y]]] ordered as players are
     @warriors = {} # [player,warrior_id] = [x,y]
     @bases = {} # [player] = [x,y]
@@ -38,8 +39,9 @@ class BattleRoyalSimulation
     @bases.each do |player, loc|
       board[loc] = 'B'
     end
-    @warriors.each do |_, loc|
+    @warriors.each do |p, loc|
       board[loc] = 'W'
+      #board[loc] = @players.index(p)
     end
     0.upto(@board_size[1]) do |y|
       0.upto(@board_size[0]) do |x|
@@ -104,9 +106,17 @@ class BattleRoyalSimulation
 
   def enemy_bases_of player
     @bases.select{ |p, l| p != player}.to_a
+          .select{ |_, l| can_be_seen_by_player(player, l) }
           .map{ |p, l| [@players.index(p), l] }
   end
 
+  def can_be_seen_by_player player, ploc
+    warriors_of(player).detect do |_, wloc|
+      dx, dy = [ploc[0] - wloc[0], ploc[1] - wloc[1]]
+      dist = Math.sqrt(dx*dx + dy*dy)
+      dist <= @view_distance
+    end
+  end
 
   # TODO: send game state
   def notify_dead_players
