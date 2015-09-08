@@ -78,16 +78,20 @@ end
 # generally attack
 class AttackPlayer < Player
   def next_moves
-    Enumerator.new do |yielder|
-      @current_warriors.each do |(id, (x, y))|
-        if @enemy_warriors.length > 0
-          target = @enemy_warriors.first[1]
-        else
-          target = @enemy_base_locations.first[1]
+    if @enemy_warriors.length == 0 && @enemy_base_locations.length == 0
+      super
+    else
+      Enumerator.new do |yielder|
+        @current_warriors.each do |(id, (x, y))|
+          if @enemy_warriors.length > 0
+            target = @enemy_warriors.first[1]
+          else
+            target = @enemy_base_locations.first[1]
+          end
+          move_mag = self.class.toward([x,y], target)
+          move = [id, [x+move_mag[0], y+move_mag[1]]]
+          yielder << move
         end
-        move_mag = self.class.toward([x,y], target)
-        move = [id, [x+move_mag[0], y+move_mag[1]]]
-        yielder << move
       end
     end
   end

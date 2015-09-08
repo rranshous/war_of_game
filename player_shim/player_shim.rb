@@ -44,8 +44,7 @@ class PlayerShim
         if line == 'done'
           break
         end
-        _, id, x, y = line.split
-        x, y = [x, y].map(&:to_i)
+        _, id, x, y = line.split.map(&:to_i)
         yielder << [id, [x, y]]
       end
     end

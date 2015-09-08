@@ -42,6 +42,9 @@ class BattleRoyalSimulation
     @warriors.each do |((p, _), loc)|
       board[loc] = @players.index(p) || 'W'
     end
+    alive_players.each do |player|
+      puts "player #{@players.index(player)}: #{warriors_of(player).length}"
+    end
     0.upto(@board_size[1]) do |y|
       0.upto(@board_size[0]) do |x|
         print board[[x,y]] || '.'
@@ -61,6 +64,10 @@ class BattleRoyalSimulation
 
   private
 
+  def alive_players
+    @players.select{ |p| @bases[p] }
+  end
+
   def spawn_warriors
     @bases.each do |player, (x,y)|
       @warriors[[player,@round]] = [x, y]
@@ -74,7 +81,7 @@ class BattleRoyalSimulation
   end
 
   def announce_round_to_players
-    @players.each do |player|
+    alive_players.each do |(player, _)|
       player.round_started(warriors_of(player),
                            enemy_warriors_of(player),
                            recently_dead_warriors,
@@ -85,14 +92,16 @@ class BattleRoyalSimulation
   def warriors_of player
     @warriors
       .select{ |(p, _), _| p == player }
-      .to_a
+      .reject{ |wd, _| @killed_warriors.include?(wd) }
       .map{ |((_, id), loc)| [id, loc] }
+      .to_a
   end
 
   def enemy_warriors_of player
     #[pid, [x, y]]
     @warriors
       .select{ |((p, _), _)| p != player }
+      .select{ |_, loc| can_be_seen_by_player(player, loc) }
       .map{ |((p, _), loc)| [@players.index(p), loc] }
   end
 
@@ -109,11 +118,10 @@ class BattleRoyalSimulation
           .map{ |p, l| [@players.index(p), l] }
   end
 
-  def can_be_seen_by_player player, ploc
+  def can_be_seen_by_player player, tloc
     warriors_of(player).detect do |_, wloc|
-      dx, dy = [ploc[0] - wloc[0], ploc[1] - wloc[1]]
+      dx, dy = [tloc[0] - wloc[0], tloc[1] - wloc[1]]
       dist = Math.sqrt(dx*dx + dy*dy)
-      puts "simulation #{@players.index(player)} dist: #{dist}"
       dist <= @view_distance
     end
   end
