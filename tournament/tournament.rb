@@ -31,14 +31,21 @@ class Tournament
 
     sim = BattleRoyalSimulation.new player_shims
     begin
-      check_all_players_alive! player_threads
-      sim.tick
-      sim.print_board
-      sleep 0.5
-    end while !sim.game_over? && sim.round < 100
-
-    player_threads.each do |pthread|
-      Process.kill("KILL", pthread.pid)
+      Timeout::timeout(10) do
+        begin
+          check_all_players_alive! player_threads
+          sim.tick
+          #sim.print_board
+          #sleep 0.5
+        end while !sim.game_over? && sim.round < 100
+      end
+    rescue Timeout::Error
+      puts "tournament timeout"
+      return [nil, :timeout]
+    ensure
+      player_threads.each do |pthread|
+        Process.kill("KILL", pthread.pid)
+      end
     end
     return [sim.winner, sim.round]
   end

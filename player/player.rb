@@ -106,16 +106,31 @@ class MoldablePlayer < Player
     EAST:  ->(*_){ [1, 0] },
     WEST:  ->(*_){ [-1, 0] },
     TOWARD_ENEMY_BASE: lambda do |state, toward|
-      toward.call state[:enemy_base_locations].first[1]
+      base = state[:enemy_base_locations].first
+      if base
+        toward.call base[1]
+      else
+        [0, 0]
+      end
     end,
     TOWARD_FRIENDLY_BASE: lambda do |state, toward|
       toward.call state[:friendly_base_location]
     end,
     TOWARD_ENEMY_WARRIOR: lambda do |state, toward|
-      toward.call state[:enemy_warriors].first[1]
+      warrior = state[:enemy_warriors].first
+      if warrior
+        toward.call warrior[1]
+      else
+        [0, 0]
+      end
     end,
     TOWARD_FRIENDLY_WARRIOR: lambda do |state, toward|
-      toward.call state[:friendly_warriors].first[1]
+      warrior = state[:friendly_warriors].first
+      if warrior
+        toward.call warrior[1]
+      else
+        [0, 0]
+      end
     end
   }
 

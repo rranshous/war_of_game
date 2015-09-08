@@ -34,6 +34,7 @@ class PlayerGrower < Darwinning::Organism
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_exec, enemy]
       results = tournament.run
+      puts "ga played #{results.length} games"
       loss_count += results.count do |(winner, players)|
         i = players.index(this_player_exec)
         i && i != winner
