@@ -13,6 +13,8 @@ when 'molded'
   player = MoldablePlayer.new 'molded', ARGV.to_a.map(&:to_i)
 when 'striking'
   player = StrikingPlayer.new 'striking'
+when 'attack'
+  player = AttackPlayer.new 'attack'
 else
   player = Player.new 'default'
 end

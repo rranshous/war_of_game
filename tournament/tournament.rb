@@ -33,8 +33,8 @@ class Tournament
     begin
       check_all_players_alive! player_threads
       sim.tick
-      #sim.print_board
-      #sleep 1
+      # sim.print_board
+      # sleep 1
     end while !sim.game_over? && sim.round < 100
 
     player_threads.each do |pthread|

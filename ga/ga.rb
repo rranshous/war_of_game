@@ -28,11 +28,16 @@ class PlayerGrower < Darwinning::Organism
     this_player_exec = "ruby ./run_player.rb molded #{genotypes.join(' ')}"
     striking_player_exec = 'ruby ./run_player.rb striking'
     random_player_exec = 'ruby ./run_player.rb random'
-    tournament = Tournament.new [this_player_exec, striking_player_exec, random_player_exec]
-    results = tournament.run
-    loss_count = results.count do |(winner, players)|
-      i = players.index(this_player_exec)
-      i && i != winner
+    attack_player_exec = 'ruby ./run_player.rb attack'
+    enemies = [striking_player_exec, random_player_exec, attack_player_exec]
+    loss_count = 0
+    enemies.each do |enemy|
+      tournament = Tournament.new [this_player_exec, enemy]
+      results = tournament.run
+      loss_count += results.count do |(winner, players)|
+        i = players.index(this_player_exec)
+        i && i != winner
+      end
     end
     puts "ga score: #{loss_count}"
     return loss_count
