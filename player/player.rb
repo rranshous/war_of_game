@@ -116,10 +116,10 @@ class MoldablePlayer < Player
         [0, 0]
       end
     end,
-    TOWARD_FRIENDLY_BASE: lambda do |state, toward|
+    TOWARD_FRIENDLY_BASE: lambda do |state, toward, away_from|
       toward.call state[:friendly_base_location]
     end,
-    TOWARD_ENEMY_WARRIOR: lambda do |state, toward|
+    TOWARD_ENEMY_WARRIOR: lambda do |state, toward, away_from|
       warrior = state[:enemy_warriors].first
       if warrior
         toward.call warrior[1]
@@ -127,13 +127,22 @@ class MoldablePlayer < Player
         [0, 0]
       end
     end,
-    TOWARD_FRIENDLY_WARRIOR: lambda do |state, toward|
+    TOWARD_FRIENDLY_WARRIOR: lambda do |state, toward, away_from|
       warrior = state[:friendly_warriors].first
       if warrior
         toward.call warrior[1]
       else
         [0, 0]
       end
+    end,
+    AWAY_FROM_FRIENDLY_WARRIOR: lambda do |state, toward, away_from|
+      loc = state[:loc]
+      state[:friendly_warriors].sort_by do |wloc|
+        dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+        Math.sqrt(dx*dx + dy*dy)
+      end
+    end,
+    AWAY_FROM_ENEMY_WARRIOR: lambda do |state, toward, away_from|
     end
   }
 
@@ -163,7 +172,7 @@ class MoldablePlayer < Player
     move_mag = [0, 0]
     MOVES.each_with_index do |(_, get_mag), i|
       if rand(100) < @move_chances[i]
-        mag = get_mag.call(state,
+        mag = get_mag.call(state.merge({ loc: [x, y]}),
                            ->(target_loc){ self.class.toward([x, y], target_loc) })
         unless mag.nil?
           move_mag[0] += mag[0]

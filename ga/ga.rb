@@ -21,6 +21,10 @@ class PlayerGrower < Darwinning::Organism
                          value_range: (0..100)),
     Darwinning::Gene.new(name: "chance of toward friendly warrior",
                          value_range: (0..100)),
+    Darwinning::Gene.new(name: "chance of away from friendly warrior",
+                         value_range: (0..100)),
+    Darwinning::Gene.new(name: "chance of away from enemy warrior",
+                         value_range: (0..100)),
   ]
   def fitness
     # run tournament against random player, score how many
