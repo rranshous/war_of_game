@@ -25,17 +25,17 @@ class PlayerGrower < Darwinning::Organism
   def fitness
     # run tournament against random player, score how many
     # games lost
-    this_player_exec = "ruby ./run_player.rb molded #{genotypes.join(' ')}"
-    striking_player_exec = 'ruby ./run_player.rb striking'
-    random_player_exec = 'ruby ./run_player.rb random'
-    attack_player_exec = 'ruby ./run_player.rb attack'
-    enemies = [striking_player_exec, random_player_exec, attack_player_exec]
+    this_player_type = ['Moldable', genotypes]
+    striking_player_type = ['Striking']
+    random_player_type = ['Random']
+    attack_player_type = ['Attack']
+    enemies = [striking_player_type, random_player_type, attack_player_type]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_exec, enemy]
+      tournament = Tournament.new [this_player_type, enemy]
       results = tournament.run
       loss_count += results.count do |(winner, players)|
-        i = players.index(this_player_exec)
+        i = players.index(this_player_type)
         i && i != winner
       end
     end

@@ -58,6 +58,9 @@ class Player
   end
 end
 
+class RandomPlayer < Player
+end
+
 # head for base, do not stop at go
 class StrikingPlayer < Player
   def next_moves
@@ -171,5 +174,4 @@ class MoldablePlayer < Player
     constrain move_mag
     [x+move_mag[0], y+move_mag[1]]
   end
-
 end
