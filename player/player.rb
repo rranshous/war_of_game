@@ -1,4 +1,6 @@
 
+require 'pry'
+
 class Player
 
   def initialize name=nil
@@ -56,6 +58,10 @@ class Player
       end
     end
   end
+
+  def self.away_from start_loc, target_loc
+    toward(start_loc, target_loc).map{ |m| m * -1 }
+  end
 end
 
 class RandomPlayer < Player
@@ -108,7 +114,7 @@ class MoldablePlayer < Player
     SOUTH: ->(*_){ [0, 1] },
     EAST:  ->(*_){ [1, 0] },
     WEST:  ->(*_){ [-1, 0] },
-    TOWARD_ENEMY_BASE: lambda do |state, toward|
+    TOWARD_ENEMY_BASE: lambda do |state, toward, away_from|
       base = state[:enemy_base_locations].first
       if base
         toward.call base[1]
@@ -137,12 +143,32 @@ class MoldablePlayer < Player
     end,
     AWAY_FROM_FRIENDLY_WARRIOR: lambda do |state, toward, away_from|
       loc = state[:loc]
-      state[:friendly_warriors].sort_by do |wloc|
-        dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
-        Math.sqrt(dx*dx + dy*dy)
+      warriors = state[:friendly_warriors]
+        .reject{|wid, _| wid == state[:wid]}
+        .sort_by do |wid, wloc|
+          dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+          dist = Math.sqrt(dx*dx + dy*dy)
+          dist
+        end
+      if warriors.length > 0
+        away_from.call warriors.first[1]
+      else
+        [0, 0]
       end
     end,
     AWAY_FROM_ENEMY_WARRIOR: lambda do |state, toward, away_from|
+      loc = state[:loc]
+      warriors = state[:enemy_warriors]
+        .sort_by do |_, wloc|
+          dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+          dist = Math.sqrt(dx*dx + dy*dy)
+          dist
+        end
+      if warriors.length > 0
+        away_from.call warriors.first[1]
+      else
+        [0, 0]
+      end
     end
   }
 
@@ -154,14 +180,14 @@ class MoldablePlayer < Player
 
   def next_moves
     Enumerator.new do |yielder|
-      @current_warriors.each do |(id, (x, y))|
-        move = [ id, compute_move_from(x, y) ]
+      @current_warriors.each do |(wid, (x, y))|
+        move = [ wid, compute_move_from(x, y, wid) ]
         yielder << move
       end
     end
   end
 
-  def compute_move_from x, y
+  def compute_move_from x, y, wid
     state = {
       friendly_warriors: @current_warriors,
       enemy_warriors: @enemy_warriors,
@@ -172,8 +198,9 @@ class MoldablePlayer < Player
     move_mag = [0, 0]
     MOVES.each_with_index do |(_, get_mag), i|
       if rand(100) < @move_chances[i]
-        mag = get_mag.call(state.merge({ loc: [x, y]}),
-                           ->(target_loc){ self.class.toward([x, y], target_loc) })
+        mag = get_mag.call(state.merge({ loc: [x, y], wid: wid}),
+                         ->(target_loc){ self.class.toward([x, y], target_loc) },
+                         ->(target_loc){ self.class.away_from([x, y], target_loc) })
         unless mag.nil?
           move_mag[0] += mag[0]
           move_mag[1] += mag[1]
