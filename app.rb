@@ -49,7 +49,10 @@ when 'in-proc-streams'
   rthreads.each{ |t| Thread.kill(t); t.join }
 
 when 'tournament'
-  player_commands = ARGV.to_a
+  player_commands = ARGV.to_a.map{|cmd| cmd.split(' ', 2)}
+  player_commands.each do |cmd_set|
+    cmd_set[1] = eval(cmd_set[1]) if cmd_set.length > 1
+  end
   puts "app creating tournament: #{player_commands.join('::')}"
   tournament = Tournament.new player_commands
   results = tournament.run

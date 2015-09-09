@@ -42,6 +42,9 @@ class BattleRoyalSimulation
     @warriors.each do |((p, _), loc)|
       board[loc] = @players.index(p) || 'W'
     end
+    if game_over?
+      puts "WINNER: #{winner}"
+    end
     alive_players.each do |player|
       puts "player #{@players.index(player)}: #{warriors_of(player).length}"
     end

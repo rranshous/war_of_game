@@ -24,6 +24,7 @@ class Tournament
   def self.run_sim player_types
     players = []
     player_types.each do |(player_type, arg)|
+      puts "tournament creating player from type: #{player_type} :: #{arg}"
       player_klass = eval("#{player_type}Player")
       players << player_klass.new(player_type, arg) if arg
       players << player_klass.new(player_type) unless arg
@@ -34,7 +35,7 @@ class Tournament
       begin
         Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
           sim.tick
-          #sim.print_board
+          sim.print_board
           #sleep 0.5
         end
       rescue Timeout::Error
