@@ -7,7 +7,6 @@ class Player
     @name = name
   end
 
-  # TODO
   def game_started base_location
     @base_location = base_location
   end
