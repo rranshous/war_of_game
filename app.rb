@@ -54,7 +54,7 @@ when 'in-proc-tournament'
   player_commands.each do |cmd_set|
     cmd_set[1] = eval(cmd_set[1]) if cmd_set.length > 1
   end
-  puts "app creating tournament: #{player_commands.join('::')}"
+  puts "app creating tournament: #{player_commands.join(' :: ')}"
   tournament = Tournament.new player_commands
   results = tournament.run
   puts "RESULTS:"
@@ -62,7 +62,7 @@ when 'in-proc-tournament'
 
 when 'tournament'
   player_commands = ARGV.to_a
-  puts "app creating tournament: #{player_commands.join('::')}"
+  puts "app creating tournament: #{player_commands.join(' :: ')}"
   tournament = ThreadedTournament.new player_commands
   results = tournament.run
   puts "RESULTS:"

@@ -70,7 +70,10 @@ class ThreadedTournament < Tournament
           puts "tournament tick timeout"
           return [nil, :timeout]
         end
-      end while !sim.game_over? && sim.round < 100
+        if sim.round >= 100
+          return [nil, :maxrounds]
+        end
+      end while !sim.game_over?
     ensure
       player_threads.each do |pthread|
         Process.kill("KILL", pthread.pid)

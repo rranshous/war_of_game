@@ -1,9 +1,16 @@
 FROM python:2.7.10
 
+#VOLUME /var/run/docker.sock /var/run/docker.sock
+ADD ./bin/docker /usr/bin/docker
+RUN chmod +x /usr/bin/docker
+
+#VOLUME ./player_repos.txt ./
+#VOLUME ./tournament_results.txt ./
+
 RUN pip install requests
 
 EXPOSE 5000
 ADD ./ /app
 WORKDIR /app
 ENTRYPOINT ["python", "bin/docker-hook"]
-CMD ["-t", "test1", "-c", "env", "--port", "5000"]
+CMD ["-t", "new_tournament_player", "-c", "./bin/tournament_server", "--port", "5000"]

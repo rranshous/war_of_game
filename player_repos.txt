@@ -1,0 +1,2 @@
+wog_player_random
+wog_player_random2
