@@ -44,8 +44,6 @@ each round players will be given the following information:
  warriors which died in the last round
 
 
-How to run a tournament between two players with tournament and players in their own containers
-```
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock  wog_tournament "ruby ./run_player.rb attack" "docker run -i wog_player_random"
-```
+How to run a tournament between two players with tournament and players in their own containers:
 
+docker run -it -v /var/run/docker.sock:/var/run/docker.sock  wog_tournament "ruby ./run_player.rb attack" "docker run -i wog_player_random"
