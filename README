@@ -44,10 +44,8 @@ each round players will be given the following information:
  warriors which died in the last round
 
 
-R
-3 x 3 [37, 73, 51, 87, 36, 40, 96, 56] => 2
-3 x 1 [46, 81, 44, 61, 77, 76, 52, 52] => 1
-15 x 100 [35, 36, 4, 39, 70, 6, 28, 69] => 0
-10 x 10 [58, 80, 89, 27, 70, 8, 96, 26] => 0
-5 x 30 [93, 93, 80, 25, 88, 16, 40, 44] => 
-10 x 5 [7, 29, 0, 39, 50, 21, 37, 77 => 10 (/30)
+How to run a tournament between two players with tournament and players in their own containers
+```
+docker run -it -v /var/run/docker.sock:/var/run/docker.sock  wog_tournament "ruby ./run_player.rb attack" "docker run -i wog_player_random"
+```
+
