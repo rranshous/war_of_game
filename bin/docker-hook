@@ -33,6 +33,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         env = dict(os.environ)
         json_params = {}
         if len(json_payload) > 0:
+            logging.debug("json_payload: %s" % json_payload)
             json_params = json.loads(json_payload)
             env.update(('REPOSITORY_' + var.upper(), str(val))
                        for var, val in json_params['repository'].items())

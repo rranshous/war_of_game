@@ -13,4 +13,4 @@ EXPOSE 5000
 ADD ./ /app
 WORKDIR /app
 ENTRYPOINT ["python", "bin/docker-hook"]
-CMD ["-t", "new_tournament_player", "-c", "./bin/tournament_server", "--port", "5000"]
+CMD ["-t", "new_tournament_player", "--port", "5000", "-c", "sh", "bin/tournament_server"]

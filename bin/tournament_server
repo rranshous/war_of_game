@@ -2,7 +2,6 @@
 echo "Adding player repo: $REPOSITORY_REPO_NAME"
 grep -q -F "$REPOSITORY_REPO_NAME" player_repos.txt || echo "$REPOSITORY_REPO_NAME" >> player_repos.txt
 
-
 echo "Reading in players"
 docker_command="docker run -it -v /var/run/docker.sock:/var/run/docker.sock wog_tournament "
 while read player_repo; do
@@ -20,6 +19,9 @@ echo "Tournament complete"
 
 echo "Posting results"
 tail -n 1 $tournament_output_path >> tournament_results.txt
+
+echo "Results: "
+cat $tournament_output_path
 
 echo "cleaning up"
 #rm $tournament_output_path

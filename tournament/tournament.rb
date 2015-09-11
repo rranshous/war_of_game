@@ -72,7 +72,7 @@ class ThreadedTournament < Tournament
       end while !sim.game_over?
     ensure
       player_threads.each do |pthread|
-        Process.kill("KILL", pthread.pid)
+        Process.kill("KILL", pthread.pid) rescue nil
       end
     end
     return [sim.winner, sim.round]
