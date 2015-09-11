@@ -1,0 +1,10 @@
+FROM ruby:2.2.2
+
+RUN mkdir /app
+WORKDIR /app
+
+#VOLUME ./player_repos.txt ./
+#VOLUME ./tournament_results.txt ./
+
+EXPOSE 8000
+CMD ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'

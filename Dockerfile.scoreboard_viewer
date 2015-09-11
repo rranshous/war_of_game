@@ -1,0 +1,10 @@
+FROM ruby:2.2.2
+
+ADD ./ /app
+WORKDIR /app
+
+EXPOSE 5000
+
+RUN ["bundle", "install"]
+ENTRYPOINT ["bundle", "exec"]
+CMD ["ruby", "scoreboard_viewer/app.rb", "-s","Puma", "-e", "0.0.0.0"]
