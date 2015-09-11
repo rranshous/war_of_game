@@ -63,7 +63,7 @@ class ThreadedTournament < Tournament
         begin
           Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
             sim.tick
-            sim.print_board
+            #sim.print_board
             #sleep 0.5
           end
         rescue Timeout::Error

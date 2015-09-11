@@ -1,3 +1,4 @@
+require 'json'
 require_relative 'simulation/simulation'
 require_relative 'player/player'
 require_relative 'player_shim/player_shim'
@@ -56,12 +57,14 @@ when 'in-proc-tournament'
   puts "app creating tournament: #{player_commands.join('::')}"
   tournament = Tournament.new player_commands
   results = tournament.run
-  puts "RESULTS: #{results}"
+  puts "RESULTS:"
+  puts results.to_json
 
 when 'tournament'
   player_commands = ARGV.to_a
   puts "app creating tournament: #{player_commands.join('::')}"
   tournament = ThreadedTournament.new player_commands
   results = tournament.run
-  puts "RESULTS: #{results}"
+  puts "RESULTS:"
+  puts results.to_json
 end

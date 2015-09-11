@@ -1,10 +1,11 @@
-require_relative 'player_shim/receiver'
-require_relative 'player/player'
 
 $stdout = STDERR # remap puts
 from_sim = STDIN
 to_sim = STDOUT
 mode = ARGV.shift
+
+require_relative 'player_shim/receiver'
+require_relative 'player/player'
 
 case mode
 when 'random'

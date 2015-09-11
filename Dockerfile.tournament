@@ -1,0 +1,10 @@
+FROM ruby:2.2.2
+
+#VOLUME /var/run/docker.sock /var/run/docker.sock
+ADD ./bin/docker /usr/bin/docker
+RUN chmod +x /usr/bin/docker
+
+ADD ./ /app
+WORKDIR /app
+ENTRYPOINT ["ruby", "app.rb", "tournament"]
+CMD ["ruby run_player.rb random", "ruby run_player.rb random"]

@@ -8,7 +8,9 @@ class Receiver
   end
 
   def tick
-    line = @from_sim.gets.chomp
+    line = @from_sim.gets
+    raise "receiver error: from sim pipe closed" if line.nil?
+    line = line.chomp
     line_pieces = line.split
     case line
     when 'game start'

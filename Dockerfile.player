@@ -1,0 +1,7 @@
+FROM ruby:2.2.2
+
+ADD ./ /app
+WORKDIR /app
+ENTRYPOINT ["ruby", "run_player.rb"]
+CMD ["random"]
+
