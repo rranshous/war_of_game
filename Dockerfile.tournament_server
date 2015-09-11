@@ -1,0 +1,9 @@
+FROM python:2.7.10
+
+RUN pip install requests
+
+EXPOSE 5000
+ADD ./ /app
+WORKDIR /app
+ENTRYPOINT ["python", "bin/docker-hook"]
+CMD ["-t", "test1", "-c", "env", "--port", "5000"]
