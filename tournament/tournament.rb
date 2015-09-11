@@ -31,17 +31,13 @@ class Tournament
 
     sim = BattleRoyalSimulation.new players
     begin
-      begin
-        Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
-          sim.tick
-          #sim.print_board
-          #sleep 0.2
-        end
-      rescue Timeout::Error
-        puts "tournament tick timeout"
-        return [nil, :timeout]
+      sim.tick
+      #sim.print_board
+      #sleep 0.2
+      if sim.round >= 100
+        return [nil, :MAXROUNDS]
       end
-    end while !sim.game_over? && sim.round < 100
+    end while !sim.game_over?
     return [sim.winner, sim.round]
   end
 end
@@ -68,10 +64,10 @@ class ThreadedTournament < Tournament
           end
         rescue Timeout::Error
           puts "tournament tick timeout"
-          return [nil, :timeout]
+          return [nil, :TIMEOUT]
         end
         if sim.round >= 100
-          return [nil, :maxrounds]
+          return [nil, :MAXROUNDS]
         end
       end while !sim.game_over?
     ensure

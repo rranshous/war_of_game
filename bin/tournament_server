@@ -14,7 +14,7 @@ done <player_repos.txt
 echo "docker command: $docker_command"
 
 echo "Starting new tournament"
-tournament_output_path="/tmp/tournament_results_`date +%s`.json"
+tournament_output_path="/tmp/tournament_results_`date +%s`.txt"
 eval $docker_command > $tournament_output_path
 echo "Tournament complete"
 
@@ -22,4 +22,4 @@ echo "Posting results"
 tail -n 1 $tournament_output_path >> tournament_results.txt
 
 echo "cleaning up"
-rm $tournament_output_path
+#rm $tournament_output_path
