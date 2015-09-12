@@ -52,25 +52,28 @@ class ThreadedTournament < Tournament
       player_shims << shim
     end
 
+    puts "tournament game starting; players: #{players.join(' :: ')}"
+
     sim = BattleRoyalSimulation.new player_shims
     begin
       begin
         check_all_players_alive! player_threads
         begin
           Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
+            sim.print_board
             sim.tick
-            #sim.print_board
-            #sleep 0.5
           end
         rescue Timeout::Error
           puts "tournament tick timeout"
           return [nil, :TIMEOUT]
         end
         if sim.round >= 100
+          sim.print_board
           return [nil, :MAXROUNDS]
         end
       end while !sim.game_over?
     ensure
+      sim.print_board
       player_threads.each do |pthread|
         Process.kill("KILL", pthread.pid) rescue nil
       end

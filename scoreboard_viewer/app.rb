@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 
+set :public_folder, "./game_outputs"
 
 helpers do
   def players tournament
@@ -31,14 +32,20 @@ get '/' do
   File.open('./tournament_results.txt') { |fh| fh.readlines }
     .map{ |l| l.chomp }
     .select{ |l| l.length > 0 }
-    .map{ |l| JSON.load(l.chomp) }
-    .map do |d|
+    .each_slice(2)
+    .map{ |gid, json| [gid, JSON.load(json.chomp)] }
+    .reverse
+    .map do |gid, d|
       """
-      <b>Tournament</b></br>
+      <b>Tournament #{gid}</b></br>
       <b>Players: </b>#{players(d).join(', ')}<br/>
       <b>Scores: </b>#{scores(d)}<br/>
+      <a href='/#{gid}.txt'>game output</a><br/>
       <hr/>
       """
     end
     .join("<br/>\n")
+end
+
+get '/game_outputs' do
 end

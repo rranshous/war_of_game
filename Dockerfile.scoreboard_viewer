@@ -1,10 +1,13 @@
 FROM ruby:2.2.2
 
+#VOLUME ./tournament_results.txt ./
+#VOLUME ./game_outputs ./
+
 ADD ./ /app
 WORKDIR /app
 
 EXPOSE 5000
 
-RUN ["bundle", "install"]
+RUN ["bundle", "install", "--without", "test"]
 ENTRYPOINT ["bundle", "exec"]
-CMD ["ruby", "scoreboard_viewer/app.rb", "-s","Puma", "-e", "0.0.0.0"]
+CMD ["ruby", "scoreboard_viewer/app.rb", "-s","Puma", "-e", "0.0.0.0", "-p", "5000"]

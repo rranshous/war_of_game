@@ -12,16 +12,18 @@ while read player_repo; do
 done <player_repos.txt
 echo "docker command: $docker_command"
 
-echo "Starting new tournament"
-tournament_output_path="/tmp/tournament_results_`date +%s`.txt"
+game_id=$(date +%s)
+echo "Starting new tournament: $game_id"
+tournament_output_path="/tmp/tournament_results_${game_id}"
 eval $docker_command > $tournament_output_path
 echo "Tournament complete"
 
 echo "Posting results"
+echo "$game_id" >> tournament_results.txt
 tail -n 1 $tournament_output_path >> tournament_results.txt
 
-echo "Results: "
-cat $tournament_output_path
+echo "Posting game output"
+mv $tournament_output_path game_outputs/$game_id.txt
 
-echo "cleaning up"
-#rm $tournament_output_path
+echo "Results: "
+tail -n 1 game_outputs/$game_id.txt

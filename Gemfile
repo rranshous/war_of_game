@@ -1,5 +1,12 @@
 source 'https://rubygems.org'
-gem 'darwinning', git: 'https://github.com/rranshous/darwinning.git'
 gem 'sinatra'
-gem 'rspec'
-gem 'pry'
+gem 'puma'
+
+group :ga do
+  gem 'darwinning', git: 'https://github.com/rranshous/darwinning.git'
+end
+
+group :test do
+  gem 'rspec'
+  gem 'pry'
+end

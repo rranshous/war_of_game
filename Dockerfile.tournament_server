@@ -6,6 +6,7 @@ RUN chmod +x /usr/bin/docker
 
 #VOLUME ./player_repos.txt ./
 #VOLUME ./tournament_results.txt ./
+#VOLUME ./game_outputs ./
 
 RUN pip install requests
 
