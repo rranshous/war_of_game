@@ -3,7 +3,7 @@ echo "Adding player repo: $REPOSITORY_REPO_NAME"
 grep -q -F "$REPOSITORY_REPO_NAME" player_repos.txt || echo "$REPOSITORY_REPO_NAME" >> player_repos.txt
 
 echo "Reading in players"
-docker_command="docker run -it -v /var/run/docker.sock:/var/run/docker.sock wog_tournament "
+docker_command="docker run -it -v /var/run/docker.sock:/var/run/docker.sock rranshous/wog_tournament "
 while read player_repo; do
   if [ -n "$player_repo" ]; then
     echo $player_repo
