@@ -4,7 +4,7 @@ require_relative '../simulation/simulation'
 require_relative '../player/player'
 
 MAX_ROUNDS = 1000
-GAMES_PER_TOURNAMENT = 50
+GAMES_PER_TOURNAMENT = 20
 
 class Tournament
   def initialize player_types
