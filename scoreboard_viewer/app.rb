@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'json'
 
-set :public_folder, "./game_outputs"
-
 helpers do
   def players tournament
     tournament.map do |(_, (player1, player2), _)|
@@ -48,7 +46,7 @@ get '/' do
       """
       <b>Tournament #{i}</b></br>
       <b>Players: </b>#{players(d).join(', ')}<br/>
-      <a href='/#{gid}.txt'>game output</a><br/><br/>
+      <a href='/game_outputs/#{gid}.txt'>game output</a><br/><br/>
       <b>Total Wins</b><br/>
       <table cellpadding='2'>
       #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{p}</td></tr>"}.join("\n")}
@@ -69,5 +67,8 @@ get '/' do
     .join("<br/>\n")
 end
 
-get '/game_outputs' do
+get '/game_outputs/:id.txt' do |gid|
+  headers['Content-Encoding'] = 'gzip'
+  content_type :text
+  send_file "./game_outputs/#{gid}.gzip"
 end

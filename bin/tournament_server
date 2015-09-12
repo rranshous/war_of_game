@@ -25,10 +25,11 @@ echo "$game_id" >> tournament_results.txt
 tail -n 1 $tournament_output_path >> tournament_results.txt
 
 echo "Posting game output"
-mv $tournament_output_path game_outputs/$game_id.txt
+gzip -c $tournament_output_path > game_outputs/$game_id.gzip
 
 echo "Results: "
-tail -n 1 game_outputs/$game_id.txt
+tail -n 1 $tournament_output_path
 
 echo "Cleaning up"
+rm $tournament_output_path
 docker rm wog_tournament_$game_id
