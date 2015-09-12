@@ -44,6 +44,7 @@ class PlayerGrower < Darwinning::Organism
       end
     end
     puts "ga score: #{loss_count}"
+    STDOUT.flush
     return loss_count
   end
 end
