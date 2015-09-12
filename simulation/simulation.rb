@@ -6,8 +6,8 @@ class BattleRoyalSimulation
   def initialize players
     @round = 0
     @players = players
-    @board_size = [20, 20]
-    @max_warriors = 5
+    @board_size = [50, 20]
+    @max_warriors = 50
     @tick_time = 1
     @view_distance = 5
     @next_moves = [] # [[[wid,[x,y]]] ordered as players are

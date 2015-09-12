@@ -3,6 +3,8 @@ require 'timeout'
 require_relative '../simulation/simulation'
 require_relative '../player/player'
 
+MAX_ROUNDS = 1000
+
 class Tournament
   def initialize player_types
     @player_types = player_types
@@ -34,7 +36,7 @@ class Tournament
       sim.tick
       #sim.print_board
       #sleep 0.2
-      if sim.round >= 100
+      if sim.round >= MAX_ROUNDS
         return [nil, :MAXROUNDS]
       end
     end while !sim.game_over?
@@ -67,7 +69,7 @@ class ThreadedTournament < Tournament
           puts "tournament tick timeout"
           return [nil, :TIMEOUT]
         end
-        if sim.round >= 100
+        if sim.round >= MAX_ROUNDS
           sim.print_board
           return [nil, :MAXROUNDS]
         end
