@@ -4,6 +4,7 @@ require_relative '../simulation/simulation'
 require_relative '../player/player'
 
 MAX_ROUNDS = 1000
+GAMES_PER_TOURNAMENT = 50
 
 class Tournament
   def initialize player_types
@@ -13,7 +14,7 @@ class Tournament
   def run
     results = []
     @player_types.combination(2).each do |game_player_types|
-      10.times do
+      GAMES_PER_TOURNAMENT.times do
         winner, rounds = self.class.run_sim game_player_types
         results << [winner, game_player_types, rounds]
       end

@@ -2,8 +2,10 @@
 echo "Adding player repo: $REPOSITORY_REPO_NAME"
 grep -q -F "$REPOSITORY_REPO_NAME" player_repos.txt || echo "$REPOSITORY_REPO_NAME" >> player_repos.txt
 
+game_id=$(date +%s)
+
 echo "Reading in players"
-docker_command="docker run -i -v /var/run/docker.sock:/var/run/docker.sock rranshous/wog_tournament "
+docker_command="docker run --name wog_tournament_$game_id -i -v /var/run/docker.sock:/var/run/docker.sock rranshous/wog_tournament "
 while read player_repo; do
   if [ -n "$player_repo" ]; then
     echo "Pulling $player_repo"
@@ -13,7 +15,6 @@ while read player_repo; do
 done <player_repos.txt
 echo "docker command: $docker_command"
 
-game_id=$(date +%s)
 echo "Starting new tournament: $game_id"
 tournament_output_path="/tmp/tournament_results_${game_id}"
 eval $docker_command > $tournament_output_path
@@ -30,5 +31,4 @@ echo "Results: "
 tail -n 1 game_outputs/$game_id.txt
 
 echo "Cleaning up"
-docker rm $(docker ps -a -q)
-docker rmi $(docker images -q -f dangling=true)
+docker rm wog_tournament_$game_id

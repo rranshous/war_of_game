@@ -10,6 +10,14 @@ helpers do
     end.flatten.uniq.sort
   end
 
+  def games tournament
+    [].tap do |r|
+      tournament.map do |(winner, players, conclusion)|
+        r << [winner, players.map{|p| p.split.last}, conclusion]
+      end
+    end
+  end
+
   def scores tournament
     wins = [];
     losses = [];
@@ -34,13 +42,27 @@ get '/' do
     .select{ |l| l.length > 0 }
     .each_slice(2)
     .map{ |gid, json| [gid, JSON.load(json.chomp)] }
+    .to_enum.each_with_index.to_a
     .reverse
-    .map do |gid, d|
+    .map do |(gid, d), i|
       """
-      <b>Tournament #{gid}</b></br>
+      <b>Tournament #{i}</b></br>
       <b>Players: </b>#{players(d).join(', ')}<br/>
-      <b>Scores: </b>#{scores(d)}<br/>
-      <a href='/#{gid}.txt'>game output</a><br/>
+      <a href='/#{gid}.txt'>game output</a><br/><br/>
+      <b>Total Wins</b><br/>
+      <table cellpadding='2'>
+      #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{p}</td></tr>"}.join("\n")}
+      </table>
+      <b>Game Results: </b><br/>
+      <table cellpadding='2'>
+      #{games(d).map do |(w, pls, e)|
+        if w.nil?
+          "<tr><td>#{pls[0]}</td><td><i>vs</i></td><td>#{pls[1]}</td><td><i>no score</i></td><td>#{e}</td></tr>"
+        else
+          "<tr><td>#{pls[w]}</td><td><i>vs</i></td><td>#{pls[w == 0 ? 1 : 0]}</td><td><i>in</i></td><td>#{e}</td></tr>"
+        end
+      end.join("\n")}
+      </table>
       <hr/>
       """
     end
