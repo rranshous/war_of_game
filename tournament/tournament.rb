@@ -7,29 +7,24 @@ module Parallelize
   def run
     puts "tournament RUNNING IN PARALLEL"
     results = Queue.new
+    work = Queue.new
+    threads = []
     @player_types.combination(2).each do |game_player_types|
-      threads = []
       @games_per_tournament.times do
-        threads << Thread.new do
+        work << game_player_types
+      end
+    end
+    2.times do
+      threads << Thread.new(work) do |work_queue|
+        loop do
+          game_player_types = work_queue.shift(true) rescue break
           winner, rounds = self.class.run_sim game_player_types, @max_rounds
           results << [winner, game_player_types, rounds]
         end
       end
-      threads.each(&:join)
     end
-    [].tap do |r|
-      loop { r << results.shift(true) rescue break }
-    end
-  end
-
-  def thread_pool
-    threads = []
-    2.times do
-      threads << Thread.new do
-        winner, rounds = self.class.run_sim game_player_types, @max_rounds
-        results << [winner, game_player_types, rounds]
-      end
-    end
+    threads.each(&:join)
+    [].tap { |r| loop { r << results.shift(true) rescue break } }
   end
 end
 
