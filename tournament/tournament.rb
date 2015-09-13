@@ -3,18 +3,47 @@ require 'timeout'
 require_relative '../simulation/simulation'
 require_relative '../player/player'
 
-GAMES_PER_TOURNAMENT = 20
+module Parallelize
+  def run
+    puts "tournament RUNNING IN PARALLEL"
+    results = Queue.new
+    @player_types.combination(2).each do |game_player_types|
+      threads = []
+      @games_per_tournament.times do
+        threads << Thread.new do
+          winner, rounds = self.class.run_sim game_player_types, @max_rounds
+          results << [winner, game_player_types, rounds]
+        end
+      end
+      threads.each(&:join)
+    end
+    [].tap do |r|
+      loop { r << results.shift(true) rescue break }
+    end
+  end
+
+  def thread_pool
+    threads = []
+    2.times do
+      threads << Thread.new do
+        winner, rounds = self.class.run_sim game_player_types, @max_rounds
+        results << [winner, game_player_types, rounds]
+      end
+    end
+  end
+end
 
 class Tournament
-  def initialize player_types, max_rounds=1000
+  def initialize player_types, max_rounds=1000, games_per_tournament=20
     @player_types = player_types
     @max_rounds = max_rounds
+    @games_per_tournament = games_per_tournament
   end
 
   def run
     results = []
     @player_types.combination(2).each do |game_player_types|
-      GAMES_PER_TOURNAMENT.times do
+      @games_per_tournament.times do
         winner, rounds = self.class.run_sim game_player_types, @max_rounds
         results << [winner, game_player_types, rounds]
       end

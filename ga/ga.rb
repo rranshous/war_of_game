@@ -36,7 +36,7 @@ class PlayerGrower < Darwinning::Organism
     enemies = [striking_player_type, attack_player_type, careful_player_type]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_type, enemy], 200
+      tournament = Tournament.new([this_player_type, enemy], 200).extend(Parallelize)
       results = tournament.run
       loss_count += results.count do |(winner, players)|
         i = players.index(this_player_type)
