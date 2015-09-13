@@ -35,8 +35,8 @@ class Tournament
     sim = BattleRoyalSimulation.new players
     begin
       sim.tick
-      #sim.print_board
-      #sleep 0.2
+      sim.print_board
+      sleep 0.2
       if sim.round >= MAX_ROUNDS
         return [nil, :MAXROUNDS]
       end

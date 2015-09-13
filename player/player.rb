@@ -66,17 +66,34 @@ end
 
 # head for base, do not stop at go
 class StrikingPlayer < Player
+  def initialize *args
+    @explored_territory = {}
+    @warrior_targets = {}
+    @last_position = {}
+    super
+  end
   def next_moves
-    if @enemy_base_locations.length > 0
-      Enumerator.new do |yielder|
-        @current_warriors.each do |(id, (x, y))|
+    Enumerator.new do |yielder|
+      @current_warriors.each do |(id, (x, y))|
+        if @warrior_targets[id] == [x, y] ||
+           @warrior_targets[id].nil? ||
+           @last_position[id] == [x, y]
+          begin
+            # inf loop?
+            @warrior_targets[id] = [rand(-10..10)+x, rand(-10..10)+y]
+          end until @explored_territory[@warrior_targets[id]].nil?
+        end
+        if @enemy_base_locations.length > 0
           move_mag = self.class.toward([x,y], @enemy_base_locations.first[1])
           move = [id, [x+move_mag[0], y+move_mag[1]]]
+          @explored_territory[move[1]] = true
           yielder << move
+        else
+          move_mag = self.class.toward([x, y], @warrior_targets[id])
+          yielder << [id, [x+move_mag[0], y+move_mag[1]]]
         end
+        @last_position[id] = [x, y]
       end
-    else
-      super
     end
   end
 end
