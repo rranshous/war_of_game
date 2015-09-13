@@ -2,6 +2,6 @@ FROM ruby:2.2.2
 
 ADD ./ /app
 WORKDIR /app
-RUN bundle install
+RUN bundle install --without web test
 ENTRYPOINT ["bundle", "exec", "ruby", "ga/ga.rb"]
 CMD ["10", "10"]

@@ -3,18 +3,17 @@ require 'timeout'
 require_relative '../simulation/simulation'
 require_relative '../player/player'
 
-GAMES_PER_TOURNAMENT = 20
-
 class Tournament
-  def initialize player_types, max_rounds=1000
+  def initialize player_types, max_rounds=1000, num_games=20
     @player_types = player_types
     @max_rounds = max_rounds
+    @num_games = num_games
   end
 
   def run
     results = []
     @player_types.combination(2).each do |game_player_types|
-      GAMES_PER_TOURNAMENT.times do
+      @num_games.times do
         winner, rounds = self.class.run_sim game_player_types, @max_rounds
         results << [winner, game_player_types, rounds]
       end

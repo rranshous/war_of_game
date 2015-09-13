@@ -27,22 +27,26 @@ class PlayerGrower < Darwinning::Organism
                          value_range: (0..100)),
   ]
   def fitness
+    if @prev_fitness
+      # FU darwinning
+      return @prev_fitness
+    end
     # run tournament against random player, score how many
     # games lost
     this_player_type = ['Moldable', genotypes]
     striking_player_type = ['Striking']
     attack_player_type = ['Attack']
-    careful_player_type = ['Careful']
-    enemies = [striking_player_type, attack_player_type, careful_player_type]
+    enemies = [striking_player_type, attack_player_type]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_type, enemy], 200
+      tournament = Tournament.new [this_player_type, enemy], 200, 5
       results = tournament.run
       loss_count += results.count do |(winner, players)|
         i = players.index(this_player_type)
         i && i != winner
       end
     end
+    @prev_fitness = loss_count
     puts "ga score: #{loss_count}"
     STDOUT.flush
     return loss_count

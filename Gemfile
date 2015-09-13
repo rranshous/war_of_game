@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
-gem 'sinatra'
-gem 'puma'
+
+group :web do
+  gem 'sinatra'
+  gem 'puma'
+end
 
 group :ga do
   gem 'darwinning', git: 'https://github.com/rranshous/darwinning.git'
