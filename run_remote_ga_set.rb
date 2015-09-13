@@ -1,7 +1,7 @@
 set_name = ARGV.shift || 'default'
 puts "building test set #{set_name}"
 system('docker build -t war_of_game_ga .')
-[ [50, 100], [20, 200] ].each do |pop, gens|
+[ [50, 10], [20, 20] ].each do |pop, gens|
   container_name = "wog_ga_#{pop}x#{gens}_#{set_name}"
   puts "rm old container"
   cmd = "docker rm #{container_name}"

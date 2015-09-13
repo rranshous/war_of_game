@@ -3,19 +3,19 @@ require 'timeout'
 require_relative '../simulation/simulation'
 require_relative '../player/player'
 
-MAX_ROUNDS = 1000
 GAMES_PER_TOURNAMENT = 20
 
 class Tournament
-  def initialize player_types
+  def initialize player_types, max_rounds=1000
     @player_types = player_types
+    @max_rounds = max_rounds
   end
 
   def run
     results = []
     @player_types.combination(2).each do |game_player_types|
       GAMES_PER_TOURNAMENT.times do
-        winner, rounds = self.class.run_sim game_player_types
+        winner, rounds = self.class.run_sim game_player_types, @max_rounds
         results << [winner, game_player_types, rounds]
       end
     end
@@ -24,7 +24,7 @@ class Tournament
 
   private
 
-  def self.run_sim player_types
+  def self.run_sim player_types, max_rounds
     players = []
     player_types.each do |(player_type, arg)|
       player_klass = eval("#{player_type}Player")
@@ -35,9 +35,9 @@ class Tournament
     sim = BattleRoyalSimulation.new players
     begin
       sim.tick
-      sim.print_board
-      sleep 0.2
-      if sim.round >= MAX_ROUNDS
+      #sim.print_board
+      #sleep 0.2
+      if sim.round >= max_rounds
         return [nil, :MAXROUNDS]
       end
     end while !sim.game_over?
@@ -46,7 +46,7 @@ class Tournament
 end
 
 class ThreadedTournament < Tournament
-  def self.run_sim players
+  def self.run_sim players, max_rounds
     player_threads = []
     player_shims = []
     players.each do |player|
@@ -70,7 +70,7 @@ class ThreadedTournament < Tournament
           puts "tournament tick timeout"
           return [nil, :TIMEOUT]
         end
-        if sim.round >= MAX_ROUNDS
+        if sim.round >= max_rounds
           sim.print_board
           return [nil, :MAXROUNDS]
         end
