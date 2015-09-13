@@ -16,6 +16,8 @@ when 'striking'
   player = StrikingPlayer.new 'striking'
 when 'attack'
   player = AttackPlayer.new 'attack'
+when 'careful'
+  player = CarefulPlayer.new 'careful'
 else
   player = Player.new 'default'
 end

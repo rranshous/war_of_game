@@ -1,0 +1,2 @@
+FROM rranshous/gow_player
+CMD ["careful"]

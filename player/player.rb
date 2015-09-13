@@ -100,14 +100,23 @@ end
 
 # generally attack
 class AttackPlayer < Player
+  def initialize *args
+    @occupied_spaces = {}
+    super
+  end
   def next_moves
     if @enemy_warriors.length == 0 && @enemy_base_locations.length == 0
       super
     else
       Enumerator.new do |yielder|
         @current_warriors.each do |(id, (x, y))|
+          enemy_warriors = @enemy_warriors.sort_by do |pid, (ex, ey)|
+            dx, dy = [ ex - x, ey - y ]
+            dist = Math.sqrt(dx*dx + dy*dy)
+            dist
+          end
           if @enemy_warriors.length > 0
-            target = @enemy_warriors.first[1]
+            target = enemy_warriors.first[1]
           else
             target = @enemy_base_locations.first[1]
           end
@@ -120,6 +129,20 @@ class AttackPlayer < Player
   end
 end
 
+# Try not to kill your team mates
+class CarefulPlayer < Player
+  def next_moves
+    occupied_spaces = Hash[(@current_players || []).map{ |(wid, loc)| [loc, wid] }]
+    Enumerator.new do |yielder|
+      super.each do |(wid, (x, y))|
+        if occupied_spaces[[x,y]].nil?
+          occupied_spaces[[x,y]] = wid
+          yielder << [wid, [x, y]]
+        end
+      end
+    end
+  end
+end
 
 class MoldablePlayer < Player
 
