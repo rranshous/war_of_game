@@ -89,7 +89,6 @@ class StrikingPlayer < Player
           yielder << move
         else
           move_mag = self.class.toward([x, y], @warrior_targets[id])
-          puts "player moving: #{move_mag}"
           yielder << [id, move_mag]
         end
         @last_position[id] = [x, y]
@@ -121,7 +120,7 @@ class AttackPlayer < Player
             target = @enemy_base_locations.first[1]
           end
           move_mag = self.class.toward([x,y], target)
-          move = [id, [move_mag[0], move_mag[1]]]
+          move = [id, move_mag]
           yielder << move
         end
       end
@@ -245,6 +244,6 @@ class MoldablePlayer < Player
       end
     end
     constrain move_mag
-    [move_mag[0], move_mag[1]]
+    move_mag
   end
 end
