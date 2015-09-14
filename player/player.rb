@@ -1,4 +1,3 @@
-
 class Player
 
   def initialize name=nil
@@ -28,7 +27,7 @@ class Player
   def next_moves
     Enumerator.new do |yielder|
       @current_warriors.each do |(id, (x, y))|
-        move = [id, [x+rand(-1..1), y+rand(-1..1)]]
+        move = [id, [rand(-1..1), rand(-1..1)]]
         yielder << move
       end
     end
@@ -85,12 +84,12 @@ class StrikingPlayer < Player
         end
         if @enemy_base_locations.length > 0
           move_mag = self.class.toward([x,y], @enemy_base_locations.first[1])
-          move = [id, [x+move_mag[0], y+move_mag[1]]]
+          move = [id, [move_mag[0], move_mag[1]]]
           @explored_territory[move[1]] = true
           yielder << move
         else
           move_mag = self.class.toward([x, y], @warrior_targets[id])
-          yielder << [id, [x+move_mag[0], y+move_mag[1]]]
+          yielder << [id, [move_mag[0], move_mag[1]]]
         end
         @last_position[id] = [x, y]
       end
@@ -121,7 +120,7 @@ class AttackPlayer < Player
             target = @enemy_base_locations.first[1]
           end
           move_mag = self.class.toward([x,y], target)
-          move = [id, [x+move_mag[0], y+move_mag[1]]]
+          move = [id, [move_mag[0], move_mag[1]]]
           yielder << move
         end
       end
@@ -245,6 +244,6 @@ class MoldablePlayer < Player
       end
     end
     constrain move_mag
-    [x+move_mag[0], y+move_mag[1]]
+    [move_mag[0], move_mag[1]]
   end
 end

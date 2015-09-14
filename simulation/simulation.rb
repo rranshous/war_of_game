@@ -189,9 +189,16 @@ class BattleRoyalSimulation
     @next_moves = []
   end
 
-  # TODO: verify moves
   def move_players_warriors player, moves
-    moves.each do |(warrior_id, (new_x, new_y))|
+    moves.each do |(warrior_id, (move_x, move_y))|
+      current_loc = @warriors[[player, warrior_id]]
+      #puts "CURR: #{current_loc.join(' :: ')}"
+      #puts "MOVE: #{move_x} :: #{move_y}"
+      move_x = [[-1, move_x].max, 1].min
+      move_y = [[-1, move_y].max, 1].min
+      new_x = current_loc[0] + move_x
+      new_y = current_loc[1] + move_y
+      #puts "NEWXY: #{new_x} :: #{new_y}"
       @warriors[[player,warrior_id]] = [
         [[0, new_x].max, @board_size[0]].min,
         [[0, new_y].max, @board_size[1]].min

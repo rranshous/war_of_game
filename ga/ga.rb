@@ -36,10 +36,14 @@ class PlayerGrower < Darwinning::Organism
     this_player_type = ['Moldable', genotypes]
     striking_player_type = ['Striking']
     attack_player_type = ['Attack']
-    enemies = [striking_player_type, attack_player_type]
+    grown2 = ['Moldable', [65, 48, 30, 22, 87, 16, 94, 63, 86, 74]]
+    grown3 = ['Moldable', [14, 22, 38, 68, 80, 33, 99, 4, 78, 15]]
+    grown4 = ['Moldable', [41, 40, 23, 93, 64, 21, 34, 81, 53, 56]]
+
+    enemies = [striking_player_type, attack_player_type, grown2, grown3, grown4]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_type, enemy], 200, 5
+      tournament = Tournament.new [this_player_type, enemy], 200, 10
       results = tournament.run
       loss_count += results.count do |(winner, players)|
         i = players.index(this_player_type)

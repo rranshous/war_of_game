@@ -34,8 +34,8 @@ class Tournament
     sim = BattleRoyalSimulation.new players
     begin
       sim.tick
-      #sim.print_board
-      #sleep 0.2
+      sleep 0.1
+      sim.print_board
       if sim.round >= max_rounds
         return [nil, :MAXROUNDS]
       end
@@ -62,6 +62,7 @@ class ThreadedTournament < Tournament
         check_all_players_alive! player_threads
         begin
           Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
+            sleep 0.5
             sim.print_board
             sim.tick
           end
