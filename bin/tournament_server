@@ -18,7 +18,7 @@ echo "docker command: $docker_command"
 echo "Starting new tournament: $game_id"
 tournament_output_path="/tmp/tournament_results_${game_id}"
 eval $docker_command > $tournament_output_path
-echo "Tournament complete"
+echo "Tournament complete @ $(date +%s)"
 
 echo "Posting results"
 echo "$game_id" >> tournament_results.txt
