@@ -26,7 +26,7 @@ class Player
 
   def next_moves
     Enumerator.new do |yielder|
-      @current_warriors.each do |(id, (x, y))|
+      @current_warriors.each do |(id, _)|
         move = [id, [rand(-1..1), rand(-1..1)]]
         yielder << move
       end
