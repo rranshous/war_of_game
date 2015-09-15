@@ -1,2 +1,2 @@
-FROM rranshous/wog_player
+FROM rranshous/wog_player:1.0
 CMD ["careful"]
