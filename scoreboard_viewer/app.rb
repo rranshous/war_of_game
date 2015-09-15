@@ -2,6 +2,12 @@ require 'sinatra'
 require 'json'
 
 helpers do
+
+  def games_played_per_player d
+    p = d.first[1][0]
+    @games_played_per_player ||= d.count{ |(_, players, _)| players.include?(p) }
+  end
+
   def players tournament
     tournament.map do |(_, (player1, player2), _)|
       [player1.split.last, player2.split.last]
@@ -17,11 +23,11 @@ helpers do
   end
 
   def scores tournament
-    wins = [];
-    losses = [];
+    wins = []
+    losses = []
     tournament.map do |(winner, players, _)|
-      loser = winner == 0 ? 1 : 0
-      if winner
+      unless winner.nil?
+        loser = winner == 0 ? 1 : 0
         wins << players[winner].split.last
         losses << players[loser].split.last
       end
@@ -49,7 +55,7 @@ get '/' do
       <a href='/game_outputs/#{gid}.txt'>game output</a><br/><br/>
       <b>Total Wins</b><br/>
       <table cellpadding='2'>
-      #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{p}</td></tr>"}.join("\n")}
+      #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{(s.to_f / games_played_per_player(d) * 100).to_i}%</td><td>#{p}</td></tr>"}.join("\n")}
       </table>
       <b>Game Results: </b><br/>
       <table cellpadding='2'>

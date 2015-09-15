@@ -37,21 +37,22 @@ class PlayerGrower < Darwinning::Organism
     striking_player_type = ['Striking']
     attack_player_type = ['Attack']
     grown2 = ['Moldable', [65, 48, 30, 22, 87, 16, 94, 63, 86, 74]]
-    grown3 = ['Moldable', [14, 22, 38, 68, 80, 33, 99, 4, 78, 15]]
-    grown4 = ['Moldable', [41, 40, 23, 93, 64, 21, 34, 81, 53, 56]]
 
-    enemies = [striking_player_type, attack_player_type, grown2, grown3, grown4]
+    puts "ga testing: #{this_player_type}"
+    enemies = [striking_player_type, attack_player_type, grown2]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_type, enemy], 200, 10
+      tournament = Tournament.new [this_player_type, enemy], 200, 10, false
       results = tournament.run
-      loss_count += results.count do |(winner, players)|
+      losses = results.count do |(winner, players)|
         i = players.index(this_player_type)
         i && i != winner
       end
+      puts "ga loss' in tournament: #{losses}  vs #{enemy}"
+      loss_count += losses
     end
     @prev_fitness = loss_count
-    puts "ga score: #{loss_count}"
+    puts "ga score: #{loss_count} / #{10 * enemies.length}"
     STDOUT.flush
     return loss_count
   end

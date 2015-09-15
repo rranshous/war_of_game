@@ -192,6 +192,7 @@ class BattleRoyalSimulation
   def move_players_warriors player, moves
     moves.each do |(warrior_id, (move_x, move_y))|
       current_loc = @warriors[[player, warrior_id]]
+      next if current_loc.nil? # can't move dead warrior
       move_x = [[-1, move_x].max, 1].min
       move_y = [[-1, move_y].max, 1].min
       new_x = current_loc[0] + move_x

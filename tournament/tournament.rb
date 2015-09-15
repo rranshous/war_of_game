@@ -4,17 +4,20 @@ require_relative '../simulation/simulation'
 require_relative '../player/player'
 
 class Tournament
-  def initialize player_types, max_rounds=1000, num_games=20
+  def initialize player_types, max_rounds=1000, num_games=20, print_board=true
     @player_types = player_types
     @max_rounds = max_rounds
     @num_games = num_games
+    @print_board = print_board
   end
 
   def run
     results = []
     @player_types.combination(2).each do |game_player_types|
       @num_games.times do
-        winner, rounds = self.class.run_sim game_player_types, @max_rounds
+        winner, rounds = self.class.run_sim game_player_types,
+                                            @max_rounds,
+                                            @print_board
         results << [winner, game_player_types, rounds]
       end
     end
@@ -23,7 +26,7 @@ class Tournament
 
   private
 
-  def self.run_sim player_types, max_rounds
+  def self.run_sim player_types, max_rounds, print_board
     players = []
     player_types.each do |(player_type, arg)|
       player_klass = eval("#{player_type}Player")
@@ -35,7 +38,7 @@ class Tournament
     begin
       sim.tick
       #sleep 0.1
-      sim.print_board
+      sim.print_board if print_board
       if sim.round >= max_rounds
         return [nil, :MAXROUNDS]
       end
@@ -45,7 +48,7 @@ class Tournament
 end
 
 class ThreadedTournament < Tournament
-  def self.run_sim players, max_rounds
+  def self.run_sim players, max_rounds, print_board
     player_threads = []
     player_shims = []
     players.each do |player|
@@ -62,8 +65,8 @@ class ThreadedTournament < Tournament
         check_all_players_alive! player_threads
         begin
           Timeout::timeout(10) do # WHY CAN I GET TIMEOUTS ON TICKS?!
-            #sleep 0.5
-            sim.print_board
+            sleep 0.2
+            sim.print_board if print_board
             sim.tick
           end
         rescue Timeout::Error
