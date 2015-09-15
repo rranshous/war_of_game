@@ -1,0 +1,3 @@
+FROM rranshous/wog_player
+CMD ["molded", "82", "65", "56", "34", "84", "20", "72", "53", "91", "12"]
+
