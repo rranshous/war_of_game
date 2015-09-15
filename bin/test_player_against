@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+enemy_player = ARGV.shift
+sleep_time = (ARGV.shift || 0.5).to_f
+max_rounds = (ARGV.shift || 100).to_i
+raise "Specify enemy (rranshous/wog_player)" unless enemy_player
+
+require_relative '../tournament/tournament'
+
+run_this_player = 'bundle exec ruby app.rb'
+players = [run_this_player, "docker run -i #{enemy_player}"]
+puts
+puts "You will be player 0"
+puts "you will be seeing up to #{max_rounds} rounds"
+puts "you have a frame delay of #{sleep_time}"
+puts "press ENTER to continue"
+puts
+gets
+puts "Starting tournament"
+tournament = ThreadedTournament.new players, max_rounds, 1
+tournament.sleep_time = sleep_time
+results = tournament.run
+r = results.first
+if r[0] == 0
+  puts "YOU WON! in #{r[2]} rounds"
+elsif r[0] == 1
+  puts "you lost in #{r[2]} rounds =/"
+elsif r[0] == nil
+  if r[2] == :MAXROUNDS
+    puts "game did not finish, stopped after #{max_rounds} rounds"
+  else
+    puts "game could not complete! #{r[2]}"
+  end
+else
+  puts "something weird happened .."
+end
