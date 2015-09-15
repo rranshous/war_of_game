@@ -18,6 +18,8 @@ when 'attack'
   player = AttackPlayer.new 'attack'
 when 'careful'
   player = CarefulPlayer.new 'careful'
+when 'bouncer'
+  player = BouncerPlayer.new 'bouncer'
 else
   player = Player.new 'default'
 end

@@ -143,6 +143,41 @@ class CarefulPlayer < Player
   end
 end
 
+
+class BouncerPlayer < Player
+
+  def initialize *args
+    @last_blocked = {}
+    @intended_locations = {}
+    super
+  end
+
+  def round_started *args
+    super
+    check_for_walls
+  end
+
+  def check_for_walls
+    @current_warriors.each do |(wid, loc)|
+      if @intended_locations[wid].nil?
+        @last_blocked[wid] = @base_location.map{ |o| o+rand(-1..1) }
+      elsif @intended_locations[wid] != loc
+        @last_blocked[wid] = loc.map{ |o| o+rand(-1..1) }
+      end
+    end
+  end
+
+  def next_moves
+    Enumerator.new do |yielder|
+      @current_warriors.each do |(wid, (x, y))|
+        move_mag = self.class.away_from [x, y], @last_blocked[wid]
+        @intended_locations[wid] = [x+move_mag[0], y+move_mag[1]]
+        yielder << [wid, move_mag]
+      end
+    end
+  end
+end
+
 class MoldablePlayer < Player
 
   MOVES = {
