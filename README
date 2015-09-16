@@ -47,3 +47,8 @@ each round players will be given the following information:
 How to run a tournament between two players with tournament and players in their own containers:
 
 docker run -it -v /var/run/docker.sock:/var/run/docker.sock  wog_tournament "ruby ./run_player.rb attack" "docker run -i wog_player_random"
+
+
+CHANGES:
+ changed simulation to require a base to be occupied for 10 ticks before it is destroyed (was a single tick, game was ending too easily)
+ tournament: http://warofgame.online/game_outputs/1442371505.txt
