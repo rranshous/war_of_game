@@ -2,10 +2,21 @@ machine:
   services:
     - docker
 
+test:
+  post:
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -f Dockerfile.ga -t rranshous/wog_ga
+    - docker build -f Dockerfile.player -t rranshous/wog_player .
+    - docker build -f Dockerfile.scoreboard_viewer -t rranshous/wog_scoreboard_viewer .
+    - docker build -f Dockerfile.tournament_server -t rranshous/wog_tournament_server .
+    - docker build -f Dockerfile.tournament -t rranshous/wog_tournament .
 
 deployment:
   hub:
     branch: master
     commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - ruby build_images.rb rranshous/wog_ga rranshous/wog_player rranshous/wog_scoreboard_viewer rranshous/wog_tournament_server rranshous/wog_tournament
+      - docker push rranshous/wog_ga
+      - docker push rranshous/wog_player
+      - docker push rranshous/wog_scoreboard_viewer
+      - docker push rranshous/wog_tournament_server
+      - docker push rranshous/wog_tournament

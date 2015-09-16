@@ -1,5 +1,6 @@
 require 'thread'
 threads = []
+push = !ENV['PUSH'].nil?
 use_threads = !ENV['THREADED'].nil?
 filter = ARGV.to_a
 Dir["Dockerfile.*"].each do |file|
@@ -14,9 +15,11 @@ Dir["Dockerfile.*"].each do |file|
     cmd = "docker build -f #{f} -t #{image_name} ."
     puts "CMD: #{cmd}"
     system(cmd)
-    cmd = "docker push #{image_name}"
-    puts "CMD: #{cmd}"
-    system(cmd)
+    if push
+      cmd = "docker push #{image_name}"
+      puts "CMD: #{cmd}"
+      system(cmd)
+    end
   end
   threads.last.join unless use_threads
   threads
