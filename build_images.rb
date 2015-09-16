@@ -17,6 +17,6 @@ Dir["Dockerfile.*"].each do |file|
     puts "CMD: #{cmd}"
     system(cmd)
   end
-  threads.last.join
+  threads
 end
 threads.map(&:join)
