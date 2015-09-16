@@ -5,7 +5,7 @@ machine:
 test:
   post:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - docker build -f Dockerfile.ga -t rranshous/wog_ga
+    - docker build -f Dockerfile.ga -t rranshous/wog_ga .
     - docker build -f Dockerfile.player -t rranshous/wog_player .
     - docker build -f Dockerfile.scoreboard_viewer -t rranshous/wog_scoreboard_viewer .
     - docker build -f Dockerfile.tournament_server -t rranshous/wog_tournament_server .
