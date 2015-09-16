@@ -56,6 +56,7 @@ get '/' do
       <b>Total Wins</b><br/>
       <table cellpadding='2'>
       #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{(s.to_f / games_played_per_player(d) * 100).to_i}%</td><td>#{p}</td></tr>"}.join("\n")}
+      </table>
       <hr/>
       """
     end
