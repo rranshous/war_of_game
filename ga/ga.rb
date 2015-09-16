@@ -36,10 +36,10 @@ class PlayerGrower < Darwinning::Organism
     this_player_type = ['Moldable', genotypes]
     striking_player_type = ['Striking']
     attack_player_type = ['Attack']
-    grown2 = ['Moldable', [65, 48, 30, 22, 87, 16, 94, 63, 86, 74]]
+    grown5 = ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]]
 
     puts "ga testing: #{this_player_type}"
-    enemies = [striking_player_type, attack_player_type, grown2]
+    enemies = [striking_player_type, attack_player_type, grown5]
     loss_count = 0
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_type, enemy], 200, 10, false
