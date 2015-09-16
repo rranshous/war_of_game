@@ -1,5 +1,6 @@
 require 'thread'
 threads = []
+use_threads = !ENV['THREADED'].nil?
 filter = ARGV.to_a
 Dir["Dockerfile.*"].each do |file|
   threads << Thread.new(file) do |f|
@@ -17,6 +18,7 @@ Dir["Dockerfile.*"].each do |file|
     puts "CMD: #{cmd}"
     system(cmd)
   end
+  threads.last.join unless use_threads
   threads
 end
 threads.map(&:join)
