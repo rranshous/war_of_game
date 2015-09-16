@@ -1,3 +1,5 @@
+echo "pulling tournament image"
+docker pull rranshous/wog_tournament
 
 echo "Adding player repo: $REPOSITORY_REPO_NAME"
 grep -q -F "$REPOSITORY_REPO_NAME" player_repos.txt || echo "$REPOSITORY_REPO_NAME" >> player_repos.txt
