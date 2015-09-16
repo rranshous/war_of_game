@@ -3,7 +3,7 @@ machine:
     - docker
 
 test:
-  post:
+  override:
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -f Dockerfile.ga -t rranshous/wog_ga .
     - docker build -f Dockerfile.player -t rranshous/wog_player .
