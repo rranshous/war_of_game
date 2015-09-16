@@ -56,17 +56,6 @@ get '/' do
       <b>Total Wins</b><br/>
       <table cellpadding='2'>
       #{scores(d).to_a.sort_by(&:last).reverse.map{|p,s| "<tr><td>#{s.to_s.ljust(3)}</td><td>#{(s.to_f / games_played_per_player(d) * 100).to_i}%</td><td>#{p}</td></tr>"}.join("\n")}
-      </table>
-      <b>Game Results: </b><br/>
-      <table cellpadding='2'>
-      #{games(d).map do |(w, pls, e)|
-        if w.nil?
-          "<tr><td>#{pls[0]}</td><td><i>vs</i></td><td>#{pls[1]}</td><td><i>no score</i></td><td>#{e}</td></tr>"
-        else
-          "<tr><td>#{pls[w]}</td><td><i>vs</i></td><td>#{pls[w == 0 ? 1 : 0]}</td><td><i>in</i></td><td>#{e}</td></tr>"
-        end
-      end.join("\n")}
-      </table>
       <hr/>
       """
     end
