@@ -7,9 +7,9 @@ Dir["Dockerfile.*"].each do |file|
     if filter.length > 0 && !filter.include?(image_name)
       next
     end
-    cmd = "docker pull #{image_name}"
-    puts "CMD: #{cmd}"
-    system(cmd)
+    #cmd = "docker pull #{image_name}"
+    #puts "CMD: #{cmd}"
+    #system(cmd)
     cmd = "docker build -f #{f} -t #{image_name} ."
     puts "CMD: #{cmd}"
     system(cmd)
