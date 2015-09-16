@@ -13,6 +13,8 @@ class BattleRoyalSimulation
     @next_moves = [] # [[[wid,[x,y]]] ordered as players are
     @warriors = {} # [player,warrior_id] = [x,y]
     @bases = {} # [player] = [x,y]
+    @base_starting_health = 10
+    @base_health = Hash[@players.map{ |p| [p, 10] }]
     @killed_warriors = [] # [player,warrior_id]
     place_random_bases
     announce_start_to_players
@@ -162,9 +164,11 @@ class BattleRoyalSimulation
   end
 
   def fight_warriors_and_bases
-    @killed_bases += @bases.select{ |bp, bl|
-                        @warriors.detect{ |(wp, _), wl| wp != bp && wl == bl } }
-                        .keys
+    hit_bases = @bases.select{ |bp, bl|
+                          @warriors.detect{ |(wp, _), wl| wp != bp && wl == bl } }
+                       .keys
+    hit_bases.each { |player| @base_health[player] -= 1 }
+    @killed_bases = @base_health.select{ |p, h| h <= 0 }.keys
   end
 
   def reap_dead_warriors
