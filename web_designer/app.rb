@@ -48,7 +48,7 @@ helpers do
     lines
     .reject{ |l| l['WINNER'] }
     .group_by do |l|
-      frame += 1 if l['player 0']
+      frame += 1 if l['player ']
       frame
     end.values
   end
