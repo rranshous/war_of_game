@@ -25,7 +25,7 @@
         var updateFrame = function() {
           if(my_active_play != active_play){ return; }
           $('#frame').html("<pre>"+frames.shift().join("\n")+"</pre>");
-          setTimeout(updateFrame, 500);
+          setTimeout(updateFrame, 250);
         }
         updateFrame();
       });

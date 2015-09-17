@@ -10,6 +10,7 @@ test:
     - docker build -f Dockerfile.scoreboard_viewer -t rranshous/wog_scoreboard_viewer .
     - docker build -f Dockerfile.tournament_server -t rranshous/wog_tournament_server .
     - docker build -f Dockerfile.tournament -t rranshous/wog_tournament .
+    - docker build -f Dockerfile.web_designer -t rranshous/wog_web_designer .
 
 deployment:
   hub:
@@ -20,3 +21,4 @@ deployment:
       - docker push rranshous/wog_scoreboard_viewer
       - docker push rranshous/wog_tournament_server
       - docker push rranshous/wog_tournament
+      - docker push rranshous/wog_web_designer

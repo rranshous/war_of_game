@@ -1,0 +1,15 @@
+FROM ruby:2.2.2
+
+#VOLUME /var/run/docker.sock /var/run/docker.sock
+ADD ./bin/docker /usr/bin/docker
+RUN chmod +x /usr/bin/docker
+
+ADD ./ /app
+WORKDIR /app
+
+EXPOSE 5000
+
+RUN ["bundle", "install", "--without", "test"]
+ENTRYPOINT ["bundle", "exec"]
+CMD ["ruby", "web_designer/app.rb", "-s","Puma", "-e", "0.0.0.0", "-p", "5000"]
+
