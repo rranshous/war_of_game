@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
+#
+require_relative '../tournament/tournament'
 
 enemy_player = ARGV.shift
 sleep_time = (ARGV.shift || 0.5).to_f
 max_rounds = (ARGV.shift || 100).to_i
 raise "Specify enemy (rranshous/wog_player)" unless enemy_player
 
-require_relative '../tournament/tournament'
-
-run_this_player = 'bundle exec ruby app.rb'
+run_this_player = ENV['PLAYER_CMD'] || 'bundle exec ruby app.rb'
 players = [run_this_player, "docker run -i #{enemy_player}"]
 puts
 puts "You will be player 0"

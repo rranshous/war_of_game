@@ -62,8 +62,16 @@ when 'in-proc-tournament'
 
 when 'tournament'
   player_commands = ARGV.to_a
-  puts "app creating tournament: #{player_commands.join(' :: ')}"
-  tournament = ThreadedTournament.new player_commands
+  rounds = 1000
+  if player_commands.first.to_i != 0
+    rounds = player_commands.shift.to_i
+  end
+  games = 20
+  if player_commands.first.to_i != 0
+    games = player_commands.shift.to_i
+  end
+  puts "app creating tournament [#{rounds}]: #{player_commands.join(' :: ')}"
+  tournament = ThreadedTournament.new player_commands, rounds, games
   results = tournament.run
   puts "RESULTS:"
   puts results.to_json
