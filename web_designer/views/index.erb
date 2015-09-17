@@ -1,0 +1,66 @@
+<h1>Builder!</h1>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script>
+  $(function() {
+    data = null;
+    slider = null;
+    frames = null;
+    var active_play = 1;
+    $("[id^=slider_]").slider();
+    $("button").click(function() {
+      var button_values = $("[id^=slider_]").map(
+        function() { return $(this).slider('value'); }
+      ).get().join(' ');
+      $.getJSON('/run', { 'player1_genes' : button_values }, function(d) {
+        data = d;
+        $("#winner").html(d.winner);
+        $("#rounds").html(d.rounds);
+        var frames = $.makeArray(d.frames);
+        active_play++;
+        var my_active_play = active_play;
+        var updateFrame = function() {
+          if(my_active_play != active_play){ return; }
+          $('#frame').html("<pre>"+frames.shift().join("\n")+"</pre>");
+          setTimeout(updateFrame, 500);
+        }
+        updateFrame();
+      });
+    });
+  });
+  </script>
+</head>
+
+<button type="button">Run It!</button>
+<br/>
+
+<table>
+  <tr><td>
+      north
+      <div id="slider_north"></div><br/>
+      south
+      <div id="slider_south"></div><br/>
+      east
+      <div id="slider_east"></div><br/>
+      west
+      <div id="slider_west"></div><br/>
+      toward enemy base
+      <div id="slider_toward_enemy_base"></div><br/>
+      toward friendly base
+      <div id="slider_toward_friendly_base"></div><br/>
+      toward enemy warrior
+      <div id="slider_toward_enemy_warrior"></div><br/>
+      toward_friendly warrior
+      <div id="slider_toward_friendly_warrior"></div><br/>
+      away from friendly warrior
+      <div id="slider_away_from_friendly_warrior"></div><br/>
+      away from enemy warrior
+      <div id="slider_away_from_enemy_warrior"></div><br/>
+  </td>
+  <td>
+    winner: <span id="winner"></span> - rounds: <span id="rounds"></span><br/>
+    <div id="frame"></div>
+  </td></tr>
