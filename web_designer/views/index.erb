@@ -19,7 +19,11 @@
       $.getJSON('/run', { 'player1_genes' : button_values, "player0": enemy },
       function(d) {
         data = d;
-        $("#winner").html(d.winner == 1 ? 'YOU!' : 'Enemy');
+        if(d.winner == null || d.winner == undefined) {
+          $("#winner").html('NO-ONE');
+        } else {
+          $("#winner").html(d.winner == 1 ? 'YOU!' : 'Enemy');
+        }
         $("#rounds").html(d.rounds);
         var frames = $.makeArray(d.frames);
         active_play++;
@@ -39,7 +43,7 @@
 <button type="button">Run It!</button>
 <br/><br/>
 
-<table>
+<table cellpadding="10px">
   <tr><td>
     <form>
       Enemy: <select name="enemy" id="player0">
