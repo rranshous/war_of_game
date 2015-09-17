@@ -15,9 +15,11 @@
       var button_values = $("[id^=slider_]").map(
         function() { return $(this).slider('value'); }
       ).get().join(' ');
-      $.getJSON('/run', { 'player1_genes' : button_values }, function(d) {
+      var enemy = $("#player0").val()
+      $.getJSON('/run', { 'player1_genes' : button_values, "player0": enemy },
+      function(d) {
         data = d;
-        $("#winner").html(d.winner);
+        $("#winner").html(d.winner == 1 ? 'YOU!' : 'Enemy');
         $("#rounds").html(d.rounds);
         var frames = $.makeArray(d.frames);
         active_play++;
@@ -25,7 +27,7 @@
         var updateFrame = function() {
           if(my_active_play != active_play){ return; }
           $('#frame').html("<pre>"+frames.shift().join("\n")+"</pre>");
-          setTimeout(updateFrame, 250);
+          if(frames.length != 0) { setTimeout(updateFrame, 250); }
         }
         updateFrame();
       });
@@ -39,28 +41,38 @@
 
 <table>
   <tr><td>
-      north
-      <div id="slider_north"></div><br/>
-      south
-      <div id="slider_south"></div><br/>
-      east
-      <div id="slider_east"></div><br/>
-      west
-      <div id="slider_west"></div><br/>
-      toward enemy base
-      <div id="slider_toward_enemy_base"></div><br/>
-      toward friendly base
-      <div id="slider_toward_friendly_base"></div><br/>
-      toward enemy warrior
-      <div id="slider_toward_enemy_warrior"></div><br/>
-      toward_friendly warrior
-      <div id="slider_toward_friendly_warrior"></div><br/>
-      away from friendly warrior
-      <div id="slider_away_from_friendly_warrior"></div><br/>
-      away from enemy warrior
-      <div id="slider_away_from_enemy_warrior"></div><br/>
+    <form>
+      Enemy: <select name="enemy" id="player0">
+        <option value="bouncer">Easy</option>
+        <option value="random">Medium</option>
+        <option value="attack">Hard</option>
+        <option value="striking">Godlike</option>
+      </select>
+    </form>
+    north
+    <div id="slider_north"></div><br/>
+    south
+    <div id="slider_south"></div><br/>
+    east
+    <div id="slider_east"></div><br/>
+    west
+    <div id="slider_west"></div><br/>
+    toward enemy base
+    <div id="slider_toward_enemy_base"></div><br/>
+    toward friendly base
+    <div id="slider_toward_friendly_base"></div><br/>
+    toward enemy warrior
+    <div id="slider_toward_enemy_warrior"></div><br/>
+    toward_friendly warrior
+    <div id="slider_toward_friendly_warrior"></div><br/>
+    away from friendly warrior
+    <div id="slider_away_from_friendly_warrior"></div><br/>
+    away from enemy warrior
+    <div id="slider_away_from_enemy_warrior"></div><br/>
   </td>
   <td>
+    you are player 1<hr/>
     winner: <span id="winner"></span> - rounds: <span id="rounds"></span><br/>
+    <hr/>
     <div id="frame"></div>
   </td></tr>

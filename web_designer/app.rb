@@ -8,7 +8,7 @@ get '/' do
 end
 
 get '/run' do
-  player0 = "random"
+  player0 = params[:player0]
   player1 = params[:player1_genes].split(' ').map(&:to_i).join(' ') # security!
   cmd = ["docker", "run", "-i", "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "rranshous/wog_tournament 100 1",
@@ -45,7 +45,9 @@ helpers do
   def breakup_game lines
     lines.shift
     frame = 0
-    lines.group_by do |l|
+    lines
+    .reject{ |l| l['WINNER'] }
+    .group_by do |l|
       frame += 1 if l['player 0']
       frame
     end.values
