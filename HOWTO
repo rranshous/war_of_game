@@ -39,18 +39,18 @@ web_designer
 you can start these via foreman (Procfile)
 
 you can than add the first player to the tourname:
-`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_attack"}}' localhost:5001/new_tournament_player`
+`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_attack"}}' localhost:7001/new_tournament_player`
 
 you'll see some docker images get d/l and than the tournament will no-op
 
 to get a real tournament run add the second player:
-`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_striking"}}' localhost:5001/new_tournament_player`
+`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_striking"}}' localhost:7001/new_tournament_player`
 
 check the tournament outputs in your browser
-`http://localhost:5000/`
+`http://localhost:7000/`
 
 you can try your hand at creating a player mold
-`http://localhost:5002/`
+`http://localhost:7002/`
 
 
 HOW DO I GROW A PLAYER?
