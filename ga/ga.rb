@@ -20,17 +20,12 @@ module Darwinning
 
   class Population
     def parallel_fitness
-      puts "STARTING #{@members.length} PARALLELS"
       # compute each orgs fitness in a sub proc
       fitnesses = ::Parallel.map(@members) do |m|
-        puts "START FITNESS COMPUTE IN WORKER"
-        m.fitness.tap do |f|
-          puts "FINISH FITNESS COMPUTE IN WORKER: #{f}"
-        end
+        m.fitness
       end
       # set the organisms fitness
       @members.zip(fitnesses) { |m, f| m.fitness = f }
-      puts "FINISHED ALL PARALLELS"
     end
 
     def parallel_evolve!
