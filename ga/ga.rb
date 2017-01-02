@@ -21,7 +21,9 @@ module Darwinning
     def parallel_fitness
       threads = @members.map do |m|
         Thread.new do
+          puts "START FITNESS COMPUTE IN THREAD"
           m.fitness
+          puts "FINISH FITNESS COMPUTE IN THREAD"
         end
       end
       threads.map(&:join)
