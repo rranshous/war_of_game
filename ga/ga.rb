@@ -110,6 +110,7 @@ class PlayerGrower < Darwinning::Organism
         i && i != winner
       end
       puts "ga losses in tournament: #{losses} / #{rounds} vs #{enemy}"
+      STDOUT.flush
       win_count = rounds - losses
       round_count += rounds
       score -= win_count
@@ -128,7 +129,7 @@ end
 population_size = (ARGV.shift || 10).to_i
 generation_limit = (ARGV.shift || 10).to_i
 puts "Running GA; pop #{population_size} gens #{generation_limit}"
-puts "V: 1.1.2"
+puts "V: 1.1.3"
 
 p = Darwinning::Population.new(
     organism: PlayerGrower, population_size: population_size,
