@@ -3,10 +3,10 @@
 # while growing players
 
 require 'darwinning'
-require 'parallel'
+require 'thread'
 require_relative '../tournament/tournament.rb'
 
-def puts msg
+def puts msg=nil
   print "#{msg}\n"
 end
 
@@ -19,14 +19,15 @@ module Darwinning
 
   class Population
     def parallel_fitness
-      ::Parallel.map(@members) do |m|
-        puts "gen fitness #{m}"
-        m.fitness
+      threads = @members.map do |m|
+        Thread.new do
+          m.fitness
+        end
       end
+      threads.map(&:join)
     end
 
     def parallel_evolve!
-      puts "RUNNING IN PARALLEL"
       parallel_fitness
       until evolution_over?
         make_next_generation!
@@ -58,6 +59,7 @@ class PlayerGrower < Darwinning::Organism
                          value_range: (0..100)),
   ]
   def fitness
+
     if @prev_fitness
       # FU darwinning
       return @prev_fitness
@@ -103,9 +105,9 @@ class PlayerGrower < Darwinning::Organism
         break
       end
     end
-    puts "ga score: #{score}"
     STDOUT.flush
     @prev_fitness = score
+    puts "ga score: #{score}"
     return score
   end
 end
