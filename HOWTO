@@ -1,0 +1,53 @@
+
+HOW DO I CODE UP CREATE A NEW PLAYER?
+
+HOW DO I GROW A NEW PLAYER?
+
+HOW DO I RUN A WEB TOURNAMENT SERVER?
+
+HOW DO I RUN A WEB PLAYER CREATOR?
+
+HOW DO I VIEW THE TOURNAMENT SCOREBOARD?
+`bundle exec ruby scoreboard_viewer/app.rb`
+ -- feeds off tournament_results.txt 
+
+HOW DO I RUN A LOCAL GAME?
+-- see below
+
+RUN RANDOM PLAYER EXAMPLE GAME
+`bundle exec ruby app.rb in-proc`
+ -- will fight two `Player`s against each other. ticks game as you press ENTER
+
+HOW DO I FIGHT TWO PLAYERS?
+-- each command will play 20 games and than output results summary
+`bundle exec ruby app.rb in-proc-tournament Attack Attack`
+ -- here we are fighting two `AttackPlayer`s against each other
+`bundle exec ruby app.rb in-proc-tournament Striking Attack`
+ -- here we fight a `Striking` and an `Attack` player
+
+HOW DO I FIGHT TWO PLAYERS LAUNCHED VIA COMMAND LINE?
+bundle exec ruby app.rb tournament "ruby run_player.rb Striking" "ruby run_player.rb Attack"
+ -- this runs a tourament between two procs, one launched w/ the command "ruby run_player.rb Striking" and the other launched via "ruby run_player.rb Attack". These can be arbitrary commands.
+
+
+HOW DO I RUN THE WHOLE SHOW?
+-- you need a few pieces running
+tournament_server
+scoreboard_viewer
+web_designer
+
+you can start these via foreman (Procfile)
+
+you can than add the first player to the tourname:
+`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_attack"}}' localhost:5001/new_tournament_player`
+
+you'll see some docker images get d/l and than the tournament will no-op
+
+to get a real tournament run add the second player:
+`curl -XPOST -v -d '{"repository":{"repo_name":"rranshous/wog_player_striking"}}' localhost:5001/new_tournament_player`
+
+check the tournament outputs in your browser
+`http://localhost:5000/`
+
+you can try your hand at creating a player mold
+`http://localhost:5002/`

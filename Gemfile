@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+group :development do
+  gem 'foreman'
+end
+
 group :web do
   gem 'sinatra'
   gem 'puma'

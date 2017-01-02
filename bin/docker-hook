@@ -104,6 +104,7 @@ def main(addr, port):
     httpd.serve_forever()
 
 if __name__ == '__main__':
+    logging.info("starting")
     parser = get_parser()
     if len(sys.argv) == 1:
         parser.print_help()
