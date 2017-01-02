@@ -11,6 +11,7 @@ end
 
 group :ga do
   gem 'darwinning', '~> 0.1.1', git: 'https://github.com/rranshous/darwinning.git'
+  gem 'parallel'
 end
 
 group :test do

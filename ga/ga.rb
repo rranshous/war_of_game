@@ -4,6 +4,7 @@
 
 require 'darwinning'
 require 'thread'
+require 'parallel'
 require_relative '../tournament/tournament.rb'
 
 def puts msg=nil
@@ -19,22 +20,25 @@ module Darwinning
 
   class Population
     def parallel_fitness
-      puts "STARTING #{@members.length} THREADS"
-      threads = @members.map do |m|
-        Thread.new do
-          puts "START FITNESS COMPUTE IN THREAD"
-          m.fitness
-          puts "FINISH FITNESS COMPUTE IN THREAD"
+      puts "STARTING #{@members.length} PARALLELS"
+      # compute each orgs fitness in a sub proc
+      fitnesses = ::Parallel.map(@members) do |m|
+        puts "START FITNESS COMPUTE IN WORKER"
+        m.fitness.tap do |f|
+          puts "FINISH FITNESS COMPUTE IN WORKER: #{f}"
         end
       end
-      threads.map(&:join)
-      puts "FINISHED ALL THREADS"
+      # set the organisms fitness
+      @members.zip(fitnesses) { |m, f| m.fitness = f }
+      puts "FINISHED ALL PARALLELS"
     end
 
     def parallel_evolve!
+      puts "initial fitness check"
       parallel_fitness
       until evolution_over?
         make_next_generation!
+        puts "after generation fitness check"
         parallel_fitness
       end
     end
@@ -42,7 +46,7 @@ module Darwinning
 end
 
 class PlayerGrower < Darwinning::Organism
-  @@sim_loops = 10
+
   @name = "PlayerGrower"
   @genes = [
     Darwinning::Gene.new(name: "chance of north", value_range: (0..100)),
@@ -62,6 +66,11 @@ class PlayerGrower < Darwinning::Organism
     Darwinning::Gene.new(name: "chance of away from enemy warrior",
                          value_range: (0..100)),
   ]
+
+  def fitness= f
+    @prev_fitness = f
+  end
+
   def fitness
 
     if @prev_fitness
@@ -119,7 +128,7 @@ end
 population_size = (ARGV.shift || 10).to_i
 generation_limit = (ARGV.shift || 10).to_i
 puts "Running GA; pop #{population_size} gens #{generation_limit}"
-puts "V: 1.1"
+puts "V: 1.1.2"
 
 p = Darwinning::Population.new(
     organism: PlayerGrower, population_size: population_size,
