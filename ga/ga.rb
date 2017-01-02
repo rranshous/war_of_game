@@ -42,22 +42,28 @@ class PlayerGrower < Darwinning::Organism
     # run tournament against random player, score how many
     # games lost
     this_player_type = ['Moldable', genotypes.map{|k,v| v}]
-    striking_player_type = ['Striking']
-    attack_player_type = ['Attack']
-    grown5 = ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]]
-    grown7 = ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]]
+    enemies = []
+    enemies << 'Striking'
+    enemies << 'Attack'
+    enemies << 'Random'
+    enemies << 'Careful'
+    enemies << 'Bouncer'
+    # grown5
+    enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]]
+    # grown7
+    enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]]
 
     puts "ga testing: #{this_player_type}"
-    enemies = [striking_player_type, attack_player_type, grown5, grown7]
     loss_count = 0
     enemies.each do |enemy|
-      tournament = Tournament.new [this_player_type, enemy], 200, 10, false
+      tournament = Tournament.new [this_player_type, enemy],
+                                  1000, 10, false
       results = tournament.run
       losses = results.count do |(winner, players)|
         i = players.index(this_player_type)
         i && i != winner
       end
-      puts "ga loss' in tournament: #{losses}  vs #{enemy}"
+      puts "ga losses in tournament: #{losses} vs #{enemy}"
       loss_count += losses
     end
     @prev_fitness = loss_count
@@ -77,6 +83,7 @@ p = Darwinning::Population.new(
 )
 p.evolve!
 
+puts "RAN GA; pop #{population_size} gens #{generation_limit}"
 puts "FOUND MOST FIT"
 puts "#{p.best_member.fitness } | #{p.best_member.to_s}"
 
