@@ -282,3 +282,10 @@ class MoldablePlayer < Player
     move_mag
   end
 end
+
+
+class BestGrownPlayer < MoldablePlayer
+  def initialize name
+    super name, [15, 41, 46, 30, 85, 5, 13, 7, 100, 13]
+  end
+end

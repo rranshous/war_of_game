@@ -20,6 +20,8 @@ when 'careful'
   player = CarefulPlayer.new 'careful'
 when 'bouncer'
   player = BouncerPlayer.new 'bouncer'
+when 'bestgrown'
+  player = BestGrown.new 'bestgrown'
 else
   player = Player.new 'default'
 end
