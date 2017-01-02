@@ -3,15 +3,35 @@
 # while growing players
 
 require 'darwinning'
+require 'parallel'
 require_relative '../tournament/tournament.rb'
 
-#require 'ruby-prof'
-#RubyProf.start
+def puts msg
+  print "#{msg}\n"
+end
 
 module Darwinning
   class Organism
     def to_s
       self.genotypes.map{|g| g.last }
+    end
+  end
+
+  class Population
+    def parallel_fitness
+      ::Parallel.map(@members) do |m|
+        puts "gen fitness #{m}"
+        m.fitness
+      end
+    end
+
+    def parallel_evolve!
+      puts "RUNNING IN PARALLEL"
+      parallel_fitness
+      until evolution_over?
+        make_next_generation!
+        parallel_fitness
+      end
     end
   end
 end
@@ -98,7 +118,7 @@ p = Darwinning::Population.new(
     organism: PlayerGrower, population_size: population_size,
     fitness_goal: 0, generations_limit: generation_limit
 )
-p.evolve!
+p.parallel_evolve!
 
 puts "RAN GA; pop #{population_size} gens #{generation_limit}"
 puts "FOUND MOST FIT"
@@ -106,9 +126,3 @@ puts "#{p.best_member.fitness } | #{p.best_member.to_s}"
 
 puts
 puts "DONE"
-
-#result = RubyProf.stop
-#printer = RubyProf::FlatPrinter.new(result)
-#printer.print(STDOUT)
-#printer = RubyProf::CallStackPrinter.new(result)
-#printer.print
