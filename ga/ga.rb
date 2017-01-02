@@ -5,6 +5,9 @@
 require 'darwinning'
 require_relative '../tournament/tournament.rb'
 
+#require 'ruby-prof'
+#RubyProf.start
+
 module Darwinning
   class Organism
     def to_s
@@ -39,37 +42,51 @@ class PlayerGrower < Darwinning::Organism
       # FU darwinning
       return @prev_fitness
     end
+
+
+    # score will always be out of 100
+    # it will be the percent of lossess across all opponents
+    # if it losses more than half the matches against an opponent
+    # it does not move on to the next opponent
+    # opponents should go up in difficulty
+
     # run tournament against random player, score how many
     # games lost
     this_player_type = ['Moldable', genotypes.map{|k,v| v}]
     enemies = []
-    enemies << 'Striking'
-    enemies << 'Attack'
     enemies << 'Random'
-    enemies << 'Careful'
     enemies << 'Bouncer'
-    # grown5
-    enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]]
-    # grown7
-    enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]]
+    enemies << 'Careful'
+    enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]] # grown5
+    enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
+    enemies << 'Attack'
+    enemies << 'Striking'
 
     puts "ga testing: #{this_player_type}"
-    loss_count = 0
+    round_count = 0
+    rounds = 10
+    score = enemies.length * rounds
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_type, enemy],
-                                  1000, 10, false
+                                  1000, rounds, false
       results = tournament.run
       losses = results.count do |(winner, players)|
         i = players.index(this_player_type)
         i && i != winner
       end
-      puts "ga losses in tournament: #{losses} vs #{enemy}"
-      loss_count += losses
+      puts "ga losses in tournament: #{losses} / #{rounds} vs #{enemy}"
+      win_count = rounds - losses
+      round_count += rounds
+      score -= win_count
+      if losses > rounds / 2 # short circuit if we lost most the rounds
+        puts "lost most rounds to enemy, stopping"
+        break
+      end
     end
-    @prev_fitness = loss_count
-    puts "ga score: #{loss_count} / #{10 * enemies.length}"
+    puts "ga score: #{score}"
     STDOUT.flush
-    return loss_count
+    @prev_fitness = score
+    return score
   end
 end
 
@@ -89,3 +106,9 @@ puts "#{p.best_member.fitness } | #{p.best_member.to_s}"
 
 puts
 puts "DONE"
+
+#result = RubyProf.stop
+#printer = RubyProf::FlatPrinter.new(result)
+#printer.print(STDOUT)
+#printer = RubyProf::CallStackPrinter.new(result)
+#printer.print
