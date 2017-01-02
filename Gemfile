@@ -10,7 +10,7 @@ group :web do
 end
 
 group :ga do
-  gem 'darwinning', git: 'https://github.com/rranshous/darwinning.git'
+  gem 'darwinning', '~> 0.1.1', git: 'https://github.com/rranshous/darwinning.git'
 end
 
 group :test do

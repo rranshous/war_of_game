@@ -5,6 +5,14 @@
 require 'darwinning'
 require_relative '../tournament/tournament.rb'
 
+module Darwinning
+  class Organism
+    def to_s
+      self.genotypes.map{|g| g.last }
+    end
+  end
+end
+
 class PlayerGrower < Darwinning::Organism
   @@sim_loops = 10
   @name = "PlayerGrower"
@@ -33,13 +41,14 @@ class PlayerGrower < Darwinning::Organism
     end
     # run tournament against random player, score how many
     # games lost
-    this_player_type = ['Moldable', genotypes]
+    this_player_type = ['Moldable', genotypes.map{|k,v| v}]
     striking_player_type = ['Striking']
     attack_player_type = ['Attack']
     grown5 = ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]]
+    grown7 = ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]]
 
     puts "ga testing: #{this_player_type}"
-    enemies = [striking_player_type, attack_player_type, grown5]
+    enemies = [striking_player_type, attack_player_type, grown5, grown7]
     loss_count = 0
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_type, enemy], 200, 10, false
@@ -68,7 +77,8 @@ p = Darwinning::Population.new(
 )
 p.evolve!
 
-p.best_member.nice_print # prints the member representing the solution
+puts "FOUND MOST FIT"
+puts "#{p.best_member.fitness } | #{p.best_member.to_s}"
 
 puts
 puts "DONE"

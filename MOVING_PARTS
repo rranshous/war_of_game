@@ -1,7 +1,7 @@
 
 bin/tournament_server -- script which will run a new tournament, capturing output and result. env var `REPOSITORY_REPO_NAME` is expected to be the repo name of a player. it is added to the global list of competing players
 bin/docker -- x86 docker binary, version tied to time of repo authoring
-bin/docker-hook -- python web server which will accept POST request and launch cmd defined at run time. used to launch `bin/tournament`. json payload can be used to define `REPOSITORY_*` env vars which sets `REPOSITORY_REPO_NAME` for `tournament_server` script.
+bin/docker-hook -- python web server which will accept POST request and launch cmd defined at run time. used to launch `bin/tournament`. json payload can be used to define `REPOSITORY_*` env vars which sets `REPOSITORY_REPO_NAME` for `tournament_server` script. This web server processes requests one at a time, guarentees only a single tournament being run at a time.
 
 app.rb -- main entry point for fighting players. Has options for what type / how to run the tournament
 

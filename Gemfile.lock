@@ -45,7 +45,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  darwinning!
+  darwinning (~> 0.1.1)!
   foreman
   pry
   puma
