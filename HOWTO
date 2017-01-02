@@ -51,3 +51,8 @@ check the tournament outputs in your browser
 
 you can try your hand at creating a player mold
 `http://localhost:5002/`
+
+
+HOW DO I GROW A PLAYER?
+`bundle exec ruby ga/ga.rb 10 10`
+ -- will do a population of 10 for 10 generations searching for winning player

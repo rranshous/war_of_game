@@ -6,7 +6,7 @@ system('docker build -t war_of_game_ga .')
   puts "rm old container"
   cmd = "docker rm #{container_name}"
   system(cmd)
-  cmd = "docker run -c 512 -d --name #{container_name} rranshous/wog_ga #{pop} #{gens}"
+  cmd = "docker run -d --name #{container_name} rranshous/wog_ga #{pop} #{gens}"
   puts "starting container"
   system(cmd)
 end
