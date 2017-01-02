@@ -19,6 +19,7 @@ module Darwinning
 
   class Population
     def parallel_fitness
+      puts "STARTING #{@members.length} THREADS"
       threads = @members.map do |m|
         Thread.new do
           puts "START FITNESS COMPUTE IN THREAD"
@@ -27,6 +28,7 @@ module Darwinning
         end
       end
       threads.map(&:join)
+      puts "FINISHED ALL THREADS"
     end
 
     def parallel_evolve!
