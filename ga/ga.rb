@@ -87,9 +87,12 @@ class PlayerGrower < Darwinning::Organism
     enemies << 'Random'
     enemies << 'Bouncer'
     enemies << 'Careful'
+    enemies << 'Attack'
     enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]] # grown5
     enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
-    enemies << 'Attack'
+    enemies << ['Moldable', [45, 64, 83, 70, 81, 4, 10, 8, 89, 17]] # grown 12
+    enemies << ['Moldable', [32, 31, 65, 64, 92, 18, 6, 70, 99, 5]] # grown11
+    enemies << ['Moldable', [51, 37, 4, 32, 96, 14, 0, 91, 95, 27]] # grown10
     enemies << 'Striking'
 
     puts "ga testing: #{this_player_type}"
