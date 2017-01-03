@@ -197,17 +197,30 @@ class MoldablePlayer < Player
       toward.call state[:friendly_base_location]
     end,
     TOWARD_ENEMY_WARRIOR: lambda do |state, toward, away_from|
-      warrior = state[:enemy_warriors].first
-      if warrior
-        toward.call warrior[1]
+      loc = state[:loc]
+      warriors = state[:friendly_warriors]
+        .reject{|wid, _| wid == state[:wid]}
+        .sort_by do |wid, wloc|
+          dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+          dist = Math.sqrt(dx*dx + dy*dy)
+          dist
+        end
+      if warriors.length > 0
+        toward.call warriors.first[1]
       else
         [0, 0]
       end
     end,
     TOWARD_FRIENDLY_WARRIOR: lambda do |state, toward, away_from|
-      warrior = state[:friendly_warriors].first
-      if warrior
-        toward.call warrior[1]
+      loc = state[:loc]
+      warriors = state[:enemy_warriors]
+        .sort_by do |_, wloc|
+          dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+          dist = Math.sqrt(dx*dx + dy*dy)
+          dist
+        end
+      if warriors.length > 0
+        toward.call warriors.first[1]
       else
         [0, 0]
       end
