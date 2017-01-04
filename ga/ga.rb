@@ -66,6 +66,11 @@ class PlayerGrower < Darwinning::Organism
     @prev_fitness = f
   end
 
+  def log msg=nil
+    print "#{msg}\n"
+    STDOUT.flush
+  end
+
   def fitness
 
     if @prev_fitness
@@ -85,19 +90,19 @@ class PlayerGrower < Darwinning::Organism
     this_player_type = ['Moldable', genotypes.map{|k,v| v}]
     enemies = []
     enemies << 'Random'
-    enemies << 'Bouncer'
-    enemies << 'Careful'
-    enemies << 'Attack'
-    enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]] # grown5
-    enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
-    enemies << ['Moldable', [45, 64, 83, 70, 81, 4, 10, 8, 89, 17]] # grown 12
-    enemies << ['Moldable', [32, 31, 65, 64, 92, 18, 6, 70, 99, 5]] # grown11
+    #enemies << 'Bouncer'
+    #enemies << 'Careful'
+    #enemies << 'Attack'
+    #enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]] # grown5
+    #enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
+    #enemies << ['Moldable', [45, 64, 83, 70, 81, 4, 10, 8, 89, 17]] # grown 12
+    #enemies << ['Moldable', [32, 31, 65, 64, 92, 18, 6, 70, 99, 5]] # grown11
     enemies << ['Moldable', [51, 37, 4, 32, 96, 14, 0, 91, 95, 27]] # grown10
     enemies << 'Striking'
 
-    puts "ga testing: #{this_player_type}"
+    log "ga testing: #{this_player_type}"
     round_count = 0
-    rounds = 10
+    rounds = 50
     score = enemies.length * rounds
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_type, enemy],
@@ -107,19 +112,18 @@ class PlayerGrower < Darwinning::Organism
         i = players.index(this_player_type)
         i && i != winner
       end
-      puts "ga losses in tournament: #{losses} / #{rounds} vs #{enemy}"
-      STDOUT.flush
+      log "ga losses in tournament: #{losses} / #{rounds} vs #{enemy}"
       win_count = rounds - losses
       round_count += rounds
       score -= win_count
       if losses > rounds / 2 # short circuit if we lost most the rounds
-        puts "lost most rounds to enemy, stopping"
+        log "lost most rounds to enemy, stopping"
         break
       end
     end
     STDOUT.flush
     @prev_fitness = score
-    puts "ga score: #{score}"
+    log "ga score: #{score}"
     return score
   end
 end
