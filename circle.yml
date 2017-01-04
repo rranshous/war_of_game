@@ -16,9 +16,9 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker push dockerfiles/rranshous/wog_ga
-      - docker push dockerfiles/rranshous/wog_player
-      - docker push dockerfiles/rranshous/wog_scoreboard_viewer
-      - docker push dockerfiles/rranshous/wog_tournament_server
-      - docker push dockerfiles/rranshous/wog_tournament
-      - docker push dockerfiles/rranshous/wog_web_designer
+      - docker push rranshous/wog_ga
+      - docker push rranshous/wog_player
+      - docker push rranshous/wog_scoreboard_viewer
+      - docker push rranshous/wog_tournament_server
+      - docker push rranshous/wog_tournament
+      - docker push rranshous/wog_web_designer
