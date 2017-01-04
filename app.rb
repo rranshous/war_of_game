@@ -72,6 +72,7 @@ when 'tournament'
   end
   puts "app creating tournament [#{rounds}]: #{player_commands.join(' :: ')}"
   tournament = ThreadedTournament.new player_commands, rounds, games
+  tournament.extend ParallelizeTournament
   results = tournament.run
   puts "RESULTS:"
   puts results.to_json

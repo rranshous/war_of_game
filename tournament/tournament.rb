@@ -1,9 +1,30 @@
 require 'open3'
 require 'timeout'
+require 'parallel'
 require_relative '../simulation/simulation'
 require_relative '../player/player'
 require_relative '../player_shim/player_shim'
 require_relative '../player_shim/receiver'
+
+module ParallelizeTournament
+  def run
+    player_combos = @player_types.combination(2).to_a
+    puts "player_combos: #{player_combos}"
+    ::Parallel.map(player_combos) do |game_player_types|
+      puts "STARTING GAME BETWEEN #{game_player_types}"
+      [].tap do |game_results|
+        @num_games.times do
+          winner, rounds = self.class.run_sim game_player_types,
+                                              @max_rounds,
+                                              @print_board,
+                                              @sleep_time
+          game_results << [winner, game_player_types, rounds]
+        end
+      end
+      puts "FINISHING GAME BETWEEN #{game_player_types}"
+    end.flatten
+  end
+end
 
 class Tournament
 
