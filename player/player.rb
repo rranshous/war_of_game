@@ -299,6 +299,6 @@ end
 
 class BestGrownPlayer < MoldablePlayer
   def initialize name
-    super name, [71, 65, 9, 22, 100, 9, 14, 76, 83, 27]
+    super name, [21, 88, 100, 23, 92, 89, 95, 99, 93, 8]
   end
 end

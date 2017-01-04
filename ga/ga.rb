@@ -114,7 +114,7 @@ class PlayerGrower < Darwinning::Organism
       log "wins #{win_count} / #{rounds} vs #{enemy}"
       round_count += rounds
       score -= win_count
-      if wins < rounds / 2 # short circuit if we lost most the rounds
+      if win_count < rounds / 2 # short circuit if we lost most the rounds
         log "lost most rounds to enemy, stopping"
         break
       end
