@@ -141,7 +141,7 @@ p.parallel_evolve!
 
 puts "RAN GA; pop #{population_size} gens #{generation_limit}"
 puts "FOUND MOST FIT"
-puts "#{p.best_member.fitness } | #{p.best_member.to_s}"
+puts "#{p.object_id}] #{p.best_member.fitness } | #{p.best_member.to_s}"
 
 puts
 puts "DONE"
