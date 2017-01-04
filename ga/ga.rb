@@ -106,17 +106,15 @@ class PlayerGrower < Darwinning::Organism
     score = enemies.length * rounds
     enemies.each do |enemy|
       tournament = Tournament.new [this_player_type, enemy],
-                                  1000, rounds, false
+                                  500, rounds, false
       results = tournament.run
-      losses = results.count do |(winner, players)|
-        i = players.index(this_player_type)
-        i && i != winner
+      win_count = results.count do |(winner, players)|
+        winner == players.index(this_player_type)
       end
-      log "losses in tournament: #{losses} / #{rounds} vs #{enemy}"
-      win_count = rounds - losses
+      log "wins #{win_count} / #{rounds} vs #{enemy}"
       round_count += rounds
       score -= win_count
-      if losses > rounds / 2 # short circuit if we lost most the rounds
+      if non_wins > rounds / 2 # short circuit if we lost most the rounds
         log "lost most rounds to enemy, stopping"
         break
       end
