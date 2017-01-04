@@ -67,7 +67,7 @@ class PlayerGrower < Darwinning::Organism
   end
 
   def log msg=nil
-    print "#{msg}\n"
+    print "[#{self.class}:#{self.object_id}] #{msg}\n"
     STDOUT.flush
   end
 
@@ -100,7 +100,7 @@ class PlayerGrower < Darwinning::Organism
     enemies << ['Moldable', [51, 37, 4, 32, 96, 14, 0, 91, 95, 27]] # grown10
     enemies << 'Striking'
 
-    log "ga testing: #{this_player_type}"
+    log "starting #{this_player_type}"
     round_count = 0
     rounds = 50
     score = enemies.length * rounds
@@ -112,7 +112,7 @@ class PlayerGrower < Darwinning::Organism
         i = players.index(this_player_type)
         i && i != winner
       end
-      log "ga losses in tournament: #{losses} / #{rounds} vs #{enemy}"
+      log "losses in tournament: #{losses} / #{rounds} vs #{enemy}"
       win_count = rounds - losses
       round_count += rounds
       score -= win_count
@@ -123,7 +123,7 @@ class PlayerGrower < Darwinning::Organism
     end
     STDOUT.flush
     @prev_fitness = score
-    log "ga score: #{score}"
+    log "score: #{score}"
     return score
   end
 end
