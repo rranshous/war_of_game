@@ -20,8 +20,8 @@ class PlayerShim
     enemy_warriors.each do |(player_id, (x, y))|
       @to_player.puts "ew #{player_id} #{x} #{y}"
     end
-    dead_warriors.each do |(player_id, (x, y))|
-      @to_player.puts "dw #{player_id} #{x} #{y}"
+    dead_warriors.each do |(_, (x, y))|
+      @to_player.puts "dw NOTGIVEN #{x} #{y}"
     end
     enemy_bases.each do |player_id, (x, y)|
       @to_player.puts "eb #{player_id} #{x} #{y}"

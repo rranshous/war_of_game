@@ -60,6 +60,10 @@ class PlayerGrower < Darwinning::Organism
                          value_range: (0..100)),
     Darwinning::Gene.new(name: "chance of away from enemy warrior",
                          value_range: (0..100)),
+    Darwinning::Gene.new(name: "chance of toward death",
+                         value_range: (0..100)),
+    Darwinning::Gene.new(name: "chance of away from death",
+                         value_range: (0..100)),
   ]
 
   def fitness= f
@@ -129,7 +133,7 @@ end
 population_size = (ARGV.shift || 10).to_i
 generation_limit = (ARGV.shift || 10).to_i
 puts "Running GA; pop #{population_size} gens #{generation_limit}"
-puts "V: 1.2"
+puts "V: 1.3 (more genes)"
 
 p = Darwinning::Population.new(
     organism: PlayerGrower, population_size: population_size,

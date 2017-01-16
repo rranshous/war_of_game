@@ -40,6 +40,11 @@ class Player
     mv[1] = [-1, [1, mv[1]].min].max
   end
 
+  def self.dist loc, wloc
+    dx, dy = [ wloc[0] - loc[0], wloc[1] - loc[1] ]
+    Math.sqrt(dx*dx + dy*dy)
+  end
+
   def self.toward start_loc, target_loc
     [0,0].tap do |move|
       if start_loc[0] > target_loc[0]
@@ -253,12 +258,32 @@ class MoldablePlayer < Player
       else
         [0, 0]
       end
+    end,
+    TOWARD_DEATH: lambda do |state, toward, away_from|
+      dead_warriors = state[:dead_warriors].sort_by do |(_, dloc)|
+        Player.dist state[:loc], dloc
+      end
+      if dead_warriors.length > 0
+        toward.call dead_warriors.first[1]
+      else
+        [0, 0]
+      end
+    end,
+    AWAY_FROM_DEATH: lambda do |state, toward, away_from|
+      dead_warriors = state[:dead_warriors].sort_by do |(_, dloc)|
+        Player.dist state[:loc], dloc
+      end
+      dead_warriors.reverse
+      if dead_warriors.length > 0
+        toward.call dead_warriors.first[1]
+      else
+        [0, 0]
+      end
     end
   }
 
   def initialize name, move_chances
     @move_chances = move_chances
-    raise "wrong # of moves" if @move_chances.length != MOVES.length
     super name
   end
 
@@ -281,6 +306,7 @@ class MoldablePlayer < Player
     }
     move_mag = [0, 0]
     MOVES.each_with_index do |(_, get_mag), i|
+      next if @move_chances[i].nil?
       if rand(100) < @move_chances[i]
         mag = get_mag.call(state.merge({ loc: [x, y], wid: wid}),
                          ->(target_loc){ self.class.toward([x, y], target_loc) },
@@ -299,6 +325,6 @@ end
 
 class BestGrownPlayer < MoldablePlayer
   def initialize name
-    super name, [21, 88, 100, 23, 92, 89, 95, 99, 93, 8]
+    super name, [21, 88, 100, 23, 92, 89, 95, 99, 93, 8, 100, 0]
   end
 end

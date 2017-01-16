@@ -11,4 +11,4 @@ run_player.rb -- runs a player, communicates via STDIN/OUT
 player_shim/player_shim.rb -- convenience interface to wire
 player_shim/receiver.rb -- sits on the wire and drives shim
 
-
+scoreboard_viewer -- sinatra app which shows the tournament results from `./tournament_results.txt`

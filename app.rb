@@ -13,7 +13,7 @@ mode = ARGV.shift
 case mode
 when 'in-proc'
   player = Player.new
-  player2 = Player.new
+  player2 = BestGrownPlayer.new 'best'
   sim = BattleRoyalSimulation.new [player, player2]
 
   begin

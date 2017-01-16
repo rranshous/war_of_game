@@ -87,9 +87,10 @@ class BattleRoyalSimulation
 
   def announce_round_to_players
     alive_players.each do |(player, _)|
+      warrior_locs = recently_dead_warrior_locations_visible_to(player)
       player.round_started(warriors_of(player),
                            enemy_warriors_of(player),
-                           recently_dead_warriors,
+                           warrior_locs,
                            enemy_bases_of(player))
     end
   end
@@ -108,6 +109,13 @@ class BattleRoyalSimulation
       .select{ |((p, _), _)| p != player }
       .select{ |_, loc| can_be_seen_by_player(player, loc) }
       .map{ |((p, _), loc)| [@players.index(p), loc] }
+  end
+
+  def recently_dead_warrior_locations_visible_to player
+    @killed_warriors
+      .map { |p, wid| [p, @warriors[[p, wid]]] }
+      .select{ |_, loc| can_be_seen_by_player(player, loc) }
+      .map{ |(p, loc)| [@players.index(p), loc] }
   end
 
   def recently_dead_warriors
