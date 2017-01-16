@@ -94,11 +94,11 @@ class PlayerGrower < Darwinning::Organism
     this_player_type = ['Moldable', genotypes.map{|k,v| v}]
     enemies = []
     enemies << 'Random'
-    #enemies << 'Bouncer'
-    #enemies << 'Careful'
-    #enemies << 'Attack'
+    enemies << 'Bouncer'
+    enemies << 'Careful'
+    enemies << 'Attack'
     #enemies << ['Moldable', [31, 38, 75, 57, 74, 21, 69, 34, 92, 60]] # grown5
-    #enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
+    enemies << ['Moldable', [100, 77, 15, 46, 73, 3, 27, 7, 99, 55]] # grown7
     #enemies << ['Moldable', [45, 64, 83, 70, 81, 4, 10, 8, 89, 17]] # grown 12
     #enemies << ['Moldable', [32, 31, 65, 64, 92, 18, 6, 70, 99, 5]] # grown11
     enemies << ['Moldable', [51, 37, 4, 32, 96, 14, 0, 91, 95, 27]] # grown10
@@ -133,7 +133,7 @@ end
 population_size = (ARGV.shift || 10).to_i
 generation_limit = (ARGV.shift || 10).to_i
 puts "Running GA; pop #{population_size} gens #{generation_limit}"
-puts "V: 1.3 (more genes)"
+puts "V: 1.4 (more genes)"
 
 p = Darwinning::Population.new(
     organism: PlayerGrower, population_size: population_size,

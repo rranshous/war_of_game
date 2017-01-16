@@ -306,8 +306,9 @@ class MoldablePlayer < Player
     }
     move_mag = [0, 0]
     MOVES.each_with_index do |(_, get_mag), i|
-      next if @move_chances[i].nil?
-      if rand(100) < @move_chances[i]
+      chance = @move_chances[i]
+      next if chance.nil?
+      if rand(100) < chance
         mag = get_mag.call(state.merge({ loc: [x, y], wid: wid}),
                          ->(target_loc){ self.class.toward([x, y], target_loc) },
                          ->(target_loc){ self.class.away_from([x, y], target_loc) })
@@ -325,6 +326,6 @@ end
 
 class BestGrownPlayer < MoldablePlayer
   def initialize name
-    super name, [21, 88, 100, 23, 92, 89, 95, 99, 93, 8, 100, 0]
+    super name, [70, 20, 70, 20, 80, 0, 70, 0, 90, 0, 100, 0]
   end
 end
